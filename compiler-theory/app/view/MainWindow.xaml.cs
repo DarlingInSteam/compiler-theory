@@ -94,29 +94,29 @@ public partial class MainWindow : Window
             .AddReferences(MetadataReference.CreateFromFile(typeof(object).Assembly.Location))
             .AddSyntaxTrees(syntaxTree);
         var semanticModel = compilation.GetSemanticModel(syntaxTree);
-    
+
         var caretPosition = textEditor.CaretOffset;
         var token = root.FindToken(caretPosition);
-    
+
         var memberAccess = token.Parent as MemberAccessExpressionSyntax ?? token.Parent.Parent as MemberAccessExpressionSyntax;
-    
+
         if (memberAccess != null)
         {
             // Получение типа выражения перед точкой
             var typeInfo = semanticModel.GetTypeInfo(memberAccess.Expression);
-    
+
             // Получение доступных членов типа
             var members = typeInfo.Type?.GetMembers()
                 .Where(m => m.Kind == SymbolKind.Method || m.Kind == SymbolKind.Property)
-                .Select(m => new MyCompletionData(m.Name))
+                .Select(m => new MyCompletionData(m.Name, GetReturnType(m), GetDocumentation(m)))
                 .ToList();
-    
+
             if (members != null && members.Any())
             {
                 // Отображение окна автодополнения
                 completionWindow = new CompletionWindow(textEditor.TextArea);
                 var data = completionWindow.CompletionList.CompletionData;
-    
+
                 foreach (var member in members)
                 {
                     data.Add(member);
@@ -125,6 +125,42 @@ public partial class MainWindow : Window
             }
         }
     }
+
+    private string GetDocumentation(ISymbol symbol)
+    {
+        var docComment = symbol.GetDocumentationCommentXml();
+        // Ваша логика для обработки XML-комментариев
+        // Здесь можно парсить XML-комментарии и извлекать нужную информацию
+        return docComment;
+    }
+    
+    private string GetReturnType(ISymbol symbol)
+    {
+        if (symbol is IMethodSymbol methodSymbol)
+        {
+            // Для метода
+            return methodSymbol.ReturnType.ToDisplayString();
+        }
+        else if (symbol is IPropertySymbol propertySymbol)
+        {
+            // Для свойства
+            return propertySymbol.Type.ToDisplayString();
+        }
+        else
+        {
+            // Другие случаи
+            return string.Empty;
+        }
+    }
+    
+    private ImageSource GetImageForSymbol(ISymbol symbol)
+    {
+        // Ваша логика для получения изображения для символа
+        // Например, можно использовать ресурсы приложения или файлы изображений
+        // Возвращайте ImageSource для соответствующего изображения
+        return null;
+    }
+
     
     private void AnalyzeCode()
     {
@@ -165,26 +201,32 @@ public partial class MainWindow : Window
 
 public class MyCompletionData : ICompletionData
 {
-    public MyCompletionData(string text)
+    public MyCompletionData(string text, string returnType, string discription)
     {
         Text = text;
+        ReturnType = returnType;
+        _description = discription;
     }
 
+    private string _description = "";
     public object Content => Text;
 
-    public object Description => "Description for " + Text;
+    public object Description => $"Returns: {ReturnType}\nDescription for {_description}";
 
-    public ImageSource Image => null;
+    public ImageSource Image { get; }
 
     public double Priority => 0;
 
     public string Text { get; }
+
+    public string ReturnType { get; }
 
     public void Complete(TextArea textArea, ISegment completionSegment, EventArgs insertionRequestEventArgs)
     {
         textArea.Document.Replace(completionSegment, Text);
     }
 }
+
 
 public class ErrorItem
 {
