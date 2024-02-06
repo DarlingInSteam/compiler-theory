@@ -1,8 +1,6 @@
-﻿using System.Configuration;
-using System.Data;
-using System.Windows;
+﻿using System.Windows;
 
-namespace compiler_theory;
+namespace compiler_theory.app.view;
 
 /// <summary>
 /// Interaction logic for App.xaml

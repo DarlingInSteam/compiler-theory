@@ -9,4 +9,36 @@
         <UseWPF>true</UseWPF>
     </PropertyGroup>
 
+    <ItemGroup>
+      <Folder Include="data\" />
+      <Folder Include="domain\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Page Update="view\MainWindow.xaml">
+        <Generator>MSBuild:Compile</Generator>
+        <XamlRuntime>Wpf</XamlRuntime>
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="app\view\MainWindow.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ApplicationDefinition Include="app\view\App.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </ApplicationDefinition>
+    </ItemGroup>
+    
+    <ItemGroup>
+        <PackageReference Include="AvalonEdit" Version="6.3.0.90" />
+        <PackageReference Include="Material.Icons" Version="2.1.6" />
+        <PackageReference Include="MaterialDesignExtensions" Version="4.0.0-a02" />
+        <PackageReference Include="MaterialDesignThemes" Version="4.9.0" />
+        <PackageReference Include="MaterialDesignColors" Version="2.1.4" />
+        <PackageReference Include="MaterialDesignThemes.MahApps" Version="0.3.0" />
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.9.0-3.final" />
+        <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.77" />
+    </ItemGroup>
 </Project>

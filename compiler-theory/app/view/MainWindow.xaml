@@ -1,0 +1,95 @@
+﻿<Window x:Class="compiler_theory.app.view.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:compiler_theory"
+        xmlns:vm="clr-namespace:compiler_theory.app.view_model"
+        xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+        mc:Ignorable="d"
+        Title="Compiler" 
+        WindowState="Maximized">
+    
+    <Window.DataContext>
+        <vm:MainWindowViewModel></vm:MainWindowViewModel>
+    </Window.DataContext>
+    
+    <Window.InputBindings>
+        <KeyBinding Key="S" Modifiers="Control" Command="{Binding SaveCommand}" />
+        <KeyBinding Key="O" Modifiers="Control + Shift" Command="{Binding OpenFileCommand}" />
+        <KeyBinding Key="C" Modifiers="Control" Command="{Binding CreateFileCommand}"></KeyBinding>
+        <KeyBinding Key="C" Modifiers="Control" Command="{Binding SaveAsCommand}"></KeyBinding>
+        <KeyBinding Key="E" Modifiers="Control" Command="{Binding ExitCommand}"></KeyBinding>
+    </Window.InputBindings>
+    
+    <Grid>
+        <Menu VerticalAlignment="Top">
+            <MenuItem Header="Файл">
+                <MenuItem Header="Создать" ToolTip="Ctrl + c" Command="{Binding CreateFileCommand}"></MenuItem>
+                <MenuItem Header="Открыть" ToolTip="Ctrl + Shift + o" Command="{Binding OpenFileCommand}"></MenuItem>
+                <MenuItem Header="Сохранить" ToolTip="Ctrl + s" Command="{Binding SaveCommand}"></MenuItem>
+                <MenuItem Header="Сохранить как" ToolTip="Ctrl + Shift + s" Command="{Binding SaveAsCommand}"></MenuItem>
+                <MenuItem Header="Выход" ToolTip="Ctrl + e" Command="{Binding ExitCommand}"></MenuItem>
+            </MenuItem>
+            
+            <MenuItem Header="Правка">
+                <MenuItem Header="Отменить" ToolTip="Ctrl + z"></MenuItem>
+                <MenuItem Header="Повторить"></MenuItem>
+                <MenuItem Header="Вырезать" ToolTip="Ctrl + x"></MenuItem>
+                <MenuItem Header="Копировать" ToolTip="Ctrl + c"></MenuItem>
+                <MenuItem Header="Вставить" ToolTip="Ctrl + v"></MenuItem>
+                <MenuItem Header="Удалить"></MenuItem>
+                <MenuItem Header="Выделить все" ToolTip="Ctrl + a"></MenuItem>
+            </MenuItem>
+            
+            <MenuItem Header="Текст">
+                <MenuItem Header="Постановка задачи"></MenuItem>
+                <MenuItem Header="Грамматика"></MenuItem>
+                <MenuItem Header="Классификация грамматики"></MenuItem>
+                <MenuItem Header="Метод анализа"></MenuItem>
+                <MenuItem Header="Диагностика и нейтрализация ошибок"></MenuItem>
+                <MenuItem Header="Тестовый пример"></MenuItem>
+                <MenuItem Header="Список литературы"></MenuItem>
+                <MenuItem Header="Исходный код программы"></MenuItem>
+            </MenuItem>
+            
+            <MenuItem Header="Пуск" ToolTip="Ctrl + f5"></MenuItem>
+            
+            <MenuItem Header="Справка">
+                <MenuItem Header="Вызов справки"></MenuItem>
+                <MenuItem Header="О программе"></MenuItem>
+            </MenuItem>
+        </Menu>
+        
+        <Menu VerticalAlignment="Bottom">
+            <MenuItem Header="Результат"></MenuItem>
+        </Menu>
+        
+        <avalonEdit:TextEditor
+            xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
+            Margin="20 65 20 65"
+            WordWrap="True"
+            ShowLineNumbers="True"
+            LineNumbersForeground="Black"
+            Name="textEditor"
+            VerticalAlignment="Stretch"
+            HorizontalAlignment="Stretch"
+            FontFamily="Consolas"
+            SyntaxHighlighting="C#"
+            FontSize="12pt">
+            <b:Interaction.Behaviors>
+                <vm:AvalonEditBehaviour InputText="{Binding Code}"/>
+            </b:Interaction.Behaviors>
+        </avalonEdit:TextEditor>
+        
+        <!-- <RichTextBox AcceptsReturn="True" Margin="20 65 20 65" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderThickness="2" > -->
+        <!--     <RichTextBox.Document> -->
+        <!--         <FlowDocument> -->
+        <!--             <Paragraph> -->
+        <!--                 <Run Text="{Binding Code}" /> -->
+        <!--             </Paragraph> -->
+        <!--         </FlowDocument> -->
+        <!--     </RichTextBox.Document> -->
+        <!-- </RichTextBox> -->
+    </Grid>
+</Window>
