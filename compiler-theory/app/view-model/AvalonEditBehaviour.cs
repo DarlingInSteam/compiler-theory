@@ -4,16 +4,30 @@ using Microsoft.Xaml.Behaviors;
 
 namespace compiler_theory.app.view_model;
 
-public sealed class AvalonEditBehaviour : Behavior<TextEditor>
+public class AvalonEditBehaviour : Behavior<TextEditor>
 {
     public static readonly DependencyProperty InputTextProperty =
         DependencyProperty.Register("InputText", typeof(string), typeof(AvalonEditBehaviour),
-            new FrameworkPropertyMetadata(default(string), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, null));
+            new FrameworkPropertyMetadata(default(string), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, InputTextChanged));
 
     public string InputText
     {
         get { return (string)GetValue(InputTextProperty); }
         set { SetValue(InputTextProperty, value); }
+    }
+
+    private static void InputTextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        var behavior = (AvalonEditBehaviour)d;
+        var textEditor = behavior.AssociatedObject;
+        
+        if (textEditor != null && textEditor.Document != null)
+        {
+            if (textEditor.Document.Text != behavior.InputText)
+            {
+                textEditor.Document.Text = behavior.InputText;
+            }
+        }
     }
 
     protected override void OnAttached()

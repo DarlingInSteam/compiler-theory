@@ -2,6 +2,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using Microsoft.Win32;
+using Prism.Commands;
 
 namespace compiler_theory.app.view_model;
 
@@ -11,6 +12,34 @@ public class MainWindowViewModel : ViewModelBase
     private string _code = "";
     private bool _fileOpenOrCreate = false;
     private string _fileOpenOrCreatePath;
+    
+    private DelegateCommand<string[]> _dropCommand;
+    public DelegateCommand<string[]> DropCommand
+    {
+        get
+        {
+            return _dropCommand ??= new DelegateCommand<string[]>(Drop);
+        }
+    }
+
+    private void Drop(string[] files)
+    {
+        if (files != null && files.Length > 0)
+        {
+            string filePath = files[0];
+            LoadFile(filePath);
+        }
+    }
+    
+    public void LoadFile(string filePath)
+    {
+        if (File.Exists(filePath))
+        {
+            Code = File.ReadAllText(filePath);
+            _fileOpenOrCreate = true;
+            _fileOpenOrCreatePath = filePath;
+        }
+    }
     
     private ICommand _exitCommand;
     public ICommand ExitCommand

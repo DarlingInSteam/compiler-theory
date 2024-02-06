@@ -1,87 +1,148 @@
-﻿<Window x:Class="compiler_theory.app.view.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:compiler_theory"
-        xmlns:vm="clr-namespace:compiler_theory.app.view_model"
-        xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
-        mc:Ignorable="d"
-        Title="Compiler" 
-        WindowState="Maximized">
-    
+﻿<Window
+    Drop="Window_Drop"
+    Title="Compiler"
+    WindowState="Maximized"
+    mc:Ignorable="d"
+    x:Class="compiler_theory.app.view.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:compiler_theory"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:compiler_theory.app.view_model"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
     <Window.DataContext>
-        <vm:MainWindowViewModel></vm:MainWindowViewModel>
+        <vm:MainWindowViewModel />
     </Window.DataContext>
-    
+
     <Window.InputBindings>
-        <KeyBinding Key="S" Modifiers="Control" Command="{Binding SaveCommand}" />
-        <KeyBinding Key="O" Modifiers="Control + Shift" Command="{Binding OpenFileCommand}" />
-        <KeyBinding Key="C" Modifiers="Control" Command="{Binding CreateFileCommand}"></KeyBinding>
-        <KeyBinding Key="C" Modifiers="Control" Command="{Binding SaveAsCommand}"></KeyBinding>
-        <KeyBinding Key="E" Modifiers="Control" Command="{Binding ExitCommand}"></KeyBinding>
+        <KeyBinding
+            Command="{Binding SaveCommand}"
+            Key="S"
+            Modifiers="Control" />
+        <KeyBinding
+            Command="{Binding OpenFileCommand}"
+            Key="O"
+            Modifiers="Control + Shift" />
+        <KeyBinding
+            Command="{Binding CreateFileCommand}"
+            Key="C"
+            Modifiers="Control" />
+        <KeyBinding
+            Command="{Binding SaveAsCommand}"
+            Key="C"
+            Modifiers="Control" />
+        <KeyBinding
+            Command="{Binding ExitCommand}"
+            Key="E"
+            Modifiers="Control" />
     </Window.InputBindings>
-    
+
     <Grid>
+        <DockPanel />
         <Menu VerticalAlignment="Top">
             <MenuItem Header="Файл">
-                <MenuItem Header="Создать" ToolTip="Ctrl + c" Command="{Binding CreateFileCommand}"></MenuItem>
-                <MenuItem Header="Открыть" ToolTip="Ctrl + Shift + o" Command="{Binding OpenFileCommand}"></MenuItem>
-                <MenuItem Header="Сохранить" ToolTip="Ctrl + s" Command="{Binding SaveCommand}"></MenuItem>
-                <MenuItem Header="Сохранить как" ToolTip="Ctrl + Shift + s" Command="{Binding SaveAsCommand}"></MenuItem>
-                <MenuItem Header="Выход" ToolTip="Ctrl + e" Command="{Binding ExitCommand}"></MenuItem>
+                <MenuItem
+                    Command="{Binding CreateFileCommand}"
+                    Header="Создать"
+                    ToolTip="Ctrl + c" />
+                <MenuItem
+                    Command="{Binding OpenFileCommand}"
+                    Header="Открыть"
+                    ToolTip="Ctrl + Shift + o" />
+                <MenuItem
+                    Command="{Binding SaveCommand}"
+                    Header="Сохранить"
+                    ToolTip="Ctrl + s" />
+                <MenuItem
+                    Command="{Binding SaveAsCommand}"
+                    Header="Сохранить как"
+                    ToolTip="Ctrl + Shift + s" />
+                <MenuItem
+                    Command="{Binding ExitCommand}"
+                    Header="Выход"
+                    ToolTip="Ctrl + e" />
             </MenuItem>
-            
+
             <MenuItem Header="Правка">
-                <MenuItem Header="Отменить" ToolTip="Ctrl + z"></MenuItem>
-                <MenuItem Header="Повторить"></MenuItem>
-                <MenuItem Header="Вырезать" ToolTip="Ctrl + x"></MenuItem>
-                <MenuItem Header="Копировать" ToolTip="Ctrl + c"></MenuItem>
-                <MenuItem Header="Вставить" ToolTip="Ctrl + v"></MenuItem>
-                <MenuItem Header="Удалить"></MenuItem>
-                <MenuItem Header="Выделить все" ToolTip="Ctrl + a"></MenuItem>
+                <MenuItem Header="Отменить" ToolTip="Ctrl + z" />
+                <MenuItem Header="Повторить" />
+                <MenuItem Header="Вырезать" ToolTip="Ctrl + x" />
+                <MenuItem Header="Копировать" ToolTip="Ctrl + c" />
+                <MenuItem Header="Вставить" ToolTip="Ctrl + v" />
+                <MenuItem Header="Удалить" />
+                <MenuItem Header="Выделить все" ToolTip="Ctrl + a" />
             </MenuItem>
-            
+
             <MenuItem Header="Текст">
-                <MenuItem Header="Постановка задачи"></MenuItem>
-                <MenuItem Header="Грамматика"></MenuItem>
-                <MenuItem Header="Классификация грамматики"></MenuItem>
-                <MenuItem Header="Метод анализа"></MenuItem>
-                <MenuItem Header="Диагностика и нейтрализация ошибок"></MenuItem>
-                <MenuItem Header="Тестовый пример"></MenuItem>
-                <MenuItem Header="Список литературы"></MenuItem>
-                <MenuItem Header="Исходный код программы"></MenuItem>
+                <MenuItem Header="Постановка задачи" />
+                <MenuItem Header="Грамматика" />
+                <MenuItem Header="Классификация грамматики" />
+                <MenuItem Header="Метод анализа" />
+                <MenuItem Header="Диагностика и нейтрализация ошибок" />
+                <MenuItem Header="Тестовый пример" />
+                <MenuItem Header="Список литературы" />
+                <MenuItem Header="Исходный код программы" />
             </MenuItem>
-            
-            <MenuItem Header="Пуск" ToolTip="Ctrl + f5"></MenuItem>
-            
+
+            <MenuItem Header="Пуск" ToolTip="Ctrl + f5" />
+
             <MenuItem Header="Справка">
-                <MenuItem Header="Вызов справки"></MenuItem>
-                <MenuItem Header="О программе"></MenuItem>
+                <MenuItem Header="Вызов справки" />
+                <MenuItem Header="О программе" />
             </MenuItem>
         </Menu>
-        
-        <Menu VerticalAlignment="Bottom">
-            <MenuItem Header="Результат"></MenuItem>
-        </Menu>
-        
-        <avalonEdit:TextEditor
-            xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
-            Margin="20 65 20 65"
-            WordWrap="True"
-            ShowLineNumbers="True"
-            LineNumbersForeground="Black"
-            Name="textEditor"
-            VerticalAlignment="Stretch"
-            HorizontalAlignment="Stretch"
-            FontFamily="Consolas"
-            SyntaxHighlighting="C#"
-            FontSize="12pt">
-            <b:Interaction.Behaviors>
-                <vm:AvalonEditBehaviour InputText="{Binding Code}"/>
-            </b:Interaction.Behaviors>
-        </avalonEdit:TextEditor>
-        
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <avalonEdit:TextEditor
+                FontFamily="Consolas"
+                FontSize="12pt"
+                HorizontalAlignment="Stretch"
+                LineNumbersForeground="Black"
+                Margin="20,65,20,65"
+                Name="textEditor"
+                ShowLineNumbers="True"
+                SyntaxHighlighting="C#"
+                VerticalAlignment="Stretch"
+                WordWrap="True"
+                xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit">
+                <b:Interaction.Behaviors>
+                    <vm:AvalonEditBehaviour InputText="{Binding Code}" />
+                </b:Interaction.Behaviors>
+            </avalonEdit:TextEditor>
+
+            <ListView
+                Grid.Row="1"
+                Height="250"
+                HorizontalAlignment="Stretch"
+                Margin="10"
+                Name="errorListViewXX"
+                VerticalAlignment="Bottom">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn
+                            DisplayMemberBinding="{Binding Error}"
+                            Header="Error"
+                            Width="Auto" />
+                        <GridViewColumn
+                            DisplayMemberBinding="{Binding Description}"
+                            Header="Description"
+                            Width="Auto" />
+                    </GridView>
+                </ListView.View>
+                <ListView.ItemsSource>
+                    <Binding Path="SyntaxErrors" UpdateSourceTrigger="PropertyChanged" />
+                </ListView.ItemsSource>
+            </ListView>
+        </Grid>
+
+
         <!-- <RichTextBox AcceptsReturn="True" Margin="20 65 20 65" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderThickness="2" > -->
         <!--     <RichTextBox.Document> -->
         <!--         <FlowDocument> -->
