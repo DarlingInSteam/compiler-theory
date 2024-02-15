@@ -1,4 +1,6 @@
+using System.Globalization;
 using System.IO;
+using System.Runtime.Intrinsics.Arm;
 using System.Windows;
 using System.Windows.Input;
 using Microsoft.Win32;
@@ -12,6 +14,22 @@ public class MainWindowViewModel : ViewModelBase
     private string _code = "";
     private bool _fileOpenOrCreate = false;
     private string _fileOpenOrCreatePath;
+    private string culture = "Russian";
+    private double _fontSize = 16;
+
+    public double FontSize
+    {
+        get { return _fontSize; }
+
+        set
+        {
+            if (_fontSize != value)
+            {
+                _fontSize = value;
+                OnPropertyChanged(nameof(FontSize));
+            }
+        }
+    }
     
     private DelegateCommand<string[]> _dropCommand;
     public DelegateCommand<string[]> DropCommand
@@ -38,6 +56,26 @@ public class MainWindowViewModel : ViewModelBase
             Code = File.ReadAllText(filePath);
             _fileOpenOrCreate = true;
             _fileOpenOrCreatePath = filePath;
+        }
+    }
+
+    private ICommand _incFont;
+
+    public ICommand IncFontCommand
+    {
+        get
+        {
+            return _incFont ?? (_incFont = new RelayCommand(IncFont));
+        }
+    }
+    
+    private ICommand _decFont;
+    
+    public ICommand DecFontCommand
+    {
+        get
+        {
+            return _decFont ?? (_decFont = new RelayCommand(DecrFont));
         }
     }
     
@@ -180,6 +218,16 @@ public class MainWindowViewModel : ViewModelBase
         _fileOpenOrCreate = true;
         _fileOpenOrCreatePath = returnValue;
     }
+
+    private void DecrFont(object parameter)
+    {
+        FontSize -= 1.0;
+    }
+
+    private void IncFont(object parameter)
+    {
+        FontSize += 1.0;
+    }
     
     private void Exit(object parameter)
     {
@@ -197,5 +245,29 @@ public class MainWindowViewModel : ViewModelBase
         }
 
         Application.Current.Shutdown();
+    }
+    
+    // private ICommand _changeLanguageCommand;
+    // public ICommand ChangeLanguageCommand
+    // {
+    //     get
+    //     {
+    //         return _changeLanguageCommand ??= new RelayCommand(ChangeLanguage);
+    //     }
+    // }
+    
+    private ICommand _changeLanguageCommand;
+    public ICommand ChangeLanguageCommand
+    {
+        get
+        {
+            return _changeLanguageCommand ??= new RelayCommand(ChangeLanguage);
+        }
+    }
+    
+    private void ChangeLanguage(object p)
+    {
+        CultureInfo newCulture = new CultureInfo("en-US");
+        CultureInfo.CurrentUICulture = newCulture;
     }
 }

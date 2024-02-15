@@ -171,7 +171,7 @@ public partial class MainWindow : Window
             .AddSyntaxTrees(syntaxTree);
         var diagnostics = compilation.GetDiagnostics();
 
-        var errorList = new List<ErrorItem>();
+        var errorList = new List<ErrorItem>(); 
 
         foreach (var diagnostic in diagnostics.Where(d => d.Severity == DiagnosticSeverity.Error))
         {
@@ -196,6 +196,107 @@ public partial class MainWindow : Window
     {
         // При каждом изменении текста в редакторе перезапускаем анализ кода и обновляем ошибки
         AnalyzeCode();
+    }
+    
+    
+    
+    private DelegateCommand _undoCommand;
+    public DelegateCommand UndoCommand
+    {
+        get
+        {
+            return _undoCommand ??= new DelegateCommand(Undo);
+        }
+    }
+
+    private DelegateCommand _redoCommand;
+    public DelegateCommand RedoCommand
+    {
+        get
+        {
+            return _redoCommand ??= new DelegateCommand(Redo);
+        }
+    }
+
+    private DelegateCommand _cutCommand;
+    public DelegateCommand CutCommand
+    {
+        get
+        {
+            return _cutCommand ??= new DelegateCommand(Cut);
+        }
+    }
+
+    private DelegateCommand _copyCommand;
+    public DelegateCommand CopyCommand
+    {
+        get
+        {
+            return _copyCommand ??= new DelegateCommand(Copy);
+        }
+    }
+
+    private DelegateCommand _pasteCommand;
+    public DelegateCommand PasteCommand
+    {
+        get
+        {
+            return _pasteCommand ??= new DelegateCommand(Paste);
+        }
+    }
+
+    private DelegateCommand _deleteCommand;
+    public DelegateCommand DeleteCommand
+    {
+        get
+        {
+            return _deleteCommand ??= new DelegateCommand(Delete);
+        }
+    }
+
+    private DelegateCommand _selectAllCommand;
+    public DelegateCommand SelectAllCommand
+    {
+        get
+        {
+            return _selectAllCommand ??= new DelegateCommand(SelectAll);
+        }
+    }
+    
+    
+    private void Undo()
+    {
+        textEditor.Undo();
+    }
+
+    private void Redo()
+    {
+        textEditor.Redo();
+    }
+
+    private void Cut()
+    {
+        textEditor.Cut();
+    }
+
+    private void Copy()
+    {
+        textEditor.Copy();
+    }
+
+    private void Paste()
+    {
+        textEditor.Paste();
+    }
+
+    private void Delete()
+    {
+        textEditor.SelectedText = string.Empty;
+    }
+
+    private void SelectAll()
+    {
+        textEditor.SelectAll();
     }
 }
 
