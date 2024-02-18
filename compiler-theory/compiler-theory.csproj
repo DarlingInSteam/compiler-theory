@@ -34,6 +34,7 @@
     <ItemGroup>
         <PackageReference Include="AvalonEdit" Version="6.3.0.90" />
         <PackageReference Include="Material.Icons" Version="2.1.6" />
+        <PackageReference Include="Material.Icons.WPF" Version="2.1.0" />
         <PackageReference Include="MaterialDesignExtensions" Version="4.0.0-a02" />
         <PackageReference Include="MaterialDesignThemes" Version="4.9.0" />
         <PackageReference Include="MaterialDesignColors" Version="2.1.4" />

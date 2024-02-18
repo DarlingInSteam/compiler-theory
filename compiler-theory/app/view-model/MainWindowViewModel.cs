@@ -1,6 +1,8 @@
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Runtime.Intrinsics.Arm;
+using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using Microsoft.Win32;
@@ -17,6 +19,62 @@ public class MainWindowViewModel : ViewModelBase
     private string culture = "Russian";
     private double _fontSize = 16;
 
+    private ObservableCollection<TabViewModel> _tabs = new ObservableCollection<TabViewModel>();
+    public ObservableCollection<TabViewModel> Tabs
+    {
+        get { return _tabs; }
+        set
+        {
+            if (_tabs != value)
+            {
+                _tabs = value;
+                OnPropertyChanged(nameof(Tabs));
+            }
+        }
+    }
+    
+    private string _filePath;
+    public string FilePath
+    {
+        get { return _filePath; }
+        set
+        {
+            if (_filePath != value)
+            {
+                _filePath = value;
+                OnPropertyChanged(nameof(FilePath));
+            }
+        }
+    }
+    
+    private string _lineSeparator = "LF";
+    public string LineSeparator
+    {
+        get { return _lineSeparator; }
+        set
+        {
+            if (_lineSeparator != value)
+            {
+                _lineSeparator = value;
+                OnPropertyChanged(nameof(LineSeparator));
+            }
+        }
+    }
+
+    private string _fileEncoding = "UTF8";
+    public string FileEncoding
+    {
+        get { return _fileEncoding; }
+        set
+        {
+            if (_fileEncoding != value)
+            {
+                _fileEncoding = value;
+                OnPropertyChanged(nameof(FileEncoding));
+            }
+        }
+    }
+    
     public double FontSize
     {
         get { return _fontSize; }
@@ -45,6 +103,7 @@ public class MainWindowViewModel : ViewModelBase
         if (files != null && files.Length > 0)
         {
             string filePath = files[0];
+            FilePath = filePath;
             LoadFile(filePath);
         }
     }
@@ -56,6 +115,9 @@ public class MainWindowViewModel : ViewModelBase
             Code = File.ReadAllText(filePath);
             _fileOpenOrCreate = true;
             _fileOpenOrCreatePath = filePath;
+            FilePath = filePath;
+            LineSeparator = GetLineSeparator(filePath);
+            FileEncoding = GetFileEncoding(filePath);
         }
     }
 
@@ -137,7 +199,10 @@ public class MainWindowViewModel : ViewModelBase
     
     public MainWindowViewModel()
     {
-        
+        var newTab = new TabViewModel();
+        newTab.TabCode = Code;
+        newTab.TabPath = "";
+        newTab.TabTitle = "Новый файл";
     }
     
     private void CreateFile(object parameter)
@@ -162,6 +227,9 @@ public class MainWindowViewModel : ViewModelBase
         
         _fileOpenOrCreate = true;
         _fileOpenOrCreatePath = resultCreate;
+        FilePath = resultCreate;
+        LineSeparator = GetLineSeparator(FilePath);
+        FileEncoding = GetFileEncoding(FilePath);
     }
     
     private void OpenFile(object parameter)
@@ -189,6 +257,9 @@ public class MainWindowViewModel : ViewModelBase
             Code = text;
             _fileOpenOrCreate = true;
             _fileOpenOrCreatePath = filePath;
+            FilePath = filePath;
+            LineSeparator = GetLineSeparator(filePath);
+            FileEncoding = GetFileEncoding(filePath);
         }
     }
 
@@ -269,5 +340,73 @@ public class MainWindowViewModel : ViewModelBase
     {
         CultureInfo newCulture = new CultureInfo("en-US");
         CultureInfo.CurrentUICulture = newCulture;
+        
+    }
+    
+    public string GetLineSeparator(string filePath)
+    {
+        using (var streamReader = new StreamReader(filePath))
+        {
+            // Читаем первые несколько байт из файла
+            int bufferSize = 1024; // Можете изменить размер буфера по вашему усмотрению
+            char[] buffer = new char[bufferSize];
+            int bytesRead = streamReader.Read(buffer, 0, bufferSize);
+
+            // Преобразуем прочитанные байты в строку
+            string firstChunk = new string(buffer, 0, bytesRead);
+
+            // Определяем сепаратор строки
+            if (firstChunk.Contains("\r\n"))
+            {
+                return "CRLF";
+            }
+            else if (firstChunk.Contains("\r"))
+            {
+                return "CR";
+            }
+            else if (firstChunk.Contains("\n"))
+            {
+                return "LF";
+            }
+            else
+            {
+                return "Unknown";
+            }
+        }
+    }
+    
+    public string GetFileEncoding(string filePath)
+    {
+        Encoding resultEncoding = null;
+        byte[] buffer = new byte[5];
+
+        using (FileStream fileStream = new FileStream(filePath, FileMode.Open))
+        {
+            fileStream.Read(buffer, 0, 5);
+            fileStream.Close();
+
+            if (buffer[0] == 0xef && buffer[1] == 0xbb && buffer[2] == 0xbf)
+            {
+                resultEncoding = Encoding.UTF8;
+            }
+            else if (buffer[0] == 0xff && buffer[1] == 0xfe)
+            {
+                resultEncoding = Encoding.Unicode;
+            }
+            else if (buffer[0] == 0xfe && buffer[1] == 0xff)
+            {
+                resultEncoding = Encoding.BigEndianUnicode;
+            }
+            else if (buffer[0] == 0 && buffer[1] == 0 && buffer[2] == 0xfe && buffer[3] == 0xff)
+            {
+                resultEncoding = Encoding.UTF32;
+            }
+            else
+            {
+                resultEncoding = Encoding.Default;
+            }
+        }
+
+        return resultEncoding.EncodingName;
     }
 }
