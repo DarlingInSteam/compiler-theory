@@ -174,9 +174,23 @@
                 <MenuItem Icon="{materialIcons:MaterialIconExt Play}" ToolTip="Запустить" />
                 <MenuItem Icon="{materialIcons:MaterialIconExt About}" ToolTip="Справка" />
             </Menu>
+
+            <TabControl ItemsSource="{Binding Tabs}" SelectedItem="{Binding SelectedTab}">
+                <TabControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding TabPath}" />
+                    </DataTemplate>
+                </TabControl.ItemTemplate>
+
+                <TabControl.ContentTemplate>
+                    <DataTemplate>
+                        <TextBlock />
+                    </DataTemplate>
+                </TabControl.ContentTemplate>
+            </TabControl>
         </StackPanel>
 
-        <Grid Margin="0,50,0,0">
+        <Grid Margin="0,100,0,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />

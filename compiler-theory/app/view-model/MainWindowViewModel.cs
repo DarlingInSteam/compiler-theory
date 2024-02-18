@@ -19,7 +19,45 @@ public class MainWindowViewModel : ViewModelBase
     private string culture = "Russian";
     private double _fontSize = 16;
 
-    private ObservableCollection<TabViewModel> _tabs = new ObservableCollection<TabViewModel>();
+    private TabViewModel _selectedTab;
+
+    public TabViewModel SelectedTab
+    {
+        get { return _selectedTab; }
+
+        set
+        {
+            if (SelectedTab != null)
+            {
+                for (int i = 0; i < Tabs.Count; i++)
+                {
+                    if (Tabs[i].TabPath == SelectedTab.TabPath)
+                    {
+                        Tabs[i].TabCode = Code;
+                    }
+
+                    if (Tabs[i].TabPath == "Новый файл")
+                    {
+                        Tabs[i].TabCode = Code;
+                        Tabs[i].TabPath = SelectedTab.TabPath;
+                        Tabs[i].FileOpenOrCreate = SelectedTab.FileOpenOrCreate;
+                    }
+                }
+            }
+
+            _selectedTab = value;
+            Code = value.TabCode;
+            _fileOpenOrCreatePath = value.TabPath;
+            GetFileEncoding(value.TabPath);
+            GetLineSeparator(value.TabPath);
+            FilePath = value.TabPath;
+            _fileOpenOrCreate = value.FileOpenOrCreate;
+            
+            OnPropertyChanged(nameof(SelectedTab));
+        }
+    }
+    
+    private ObservableCollection<TabViewModel> _tabs;
     public ObservableCollection<TabViewModel> Tabs
     {
         get { return _tabs; }
@@ -112,12 +150,20 @@ public class MainWindowViewModel : ViewModelBase
     {
         if (File.Exists(filePath))
         {
-            Code = File.ReadAllText(filePath);
             _fileOpenOrCreate = true;
             _fileOpenOrCreatePath = filePath;
             FilePath = filePath;
             LineSeparator = GetLineSeparator(filePath);
             FileEncoding = GetFileEncoding(filePath);
+
+            var newTab = new TabViewModel();
+            
+            newTab.TabPath = filePath;
+            newTab.TabCode = File.ReadAllText(filePath);
+            newTab.FileOpenOrCreate = true;
+        
+            Tabs.Add(newTab);
+            SelectedTab = newTab;
         }
     }
 
@@ -199,27 +245,15 @@ public class MainWindowViewModel : ViewModelBase
     
     public MainWindowViewModel()
     {
+        Tabs = new ObservableCollection<TabViewModel>();
         var newTab = new TabViewModel();
         newTab.TabCode = Code;
-        newTab.TabPath = "";
-        newTab.TabTitle = "Новый файл";
+        newTab.TabPath = "Новый файл";
+        Tabs.Add(newTab);
     }
     
     private void CreateFile(object parameter)
     {
-        if (Code.Length != 0)
-        {
-            MessageBoxResult result = MessageBox.Show("Хотите сохранить изменения перед созданием нового файла?", 
-                "Внимание", 
-                MessageBoxButton.YesNoCancel, 
-                MessageBoxImage.Warning);
-
-            if (result == MessageBoxResult.Yes)
-            {
-                Save(null);
-            }
-        }
-
         var fileService = new FileService();
         var resultCreate = fileService.CreateFile();
         
@@ -230,36 +264,36 @@ public class MainWindowViewModel : ViewModelBase
         FilePath = resultCreate;
         LineSeparator = GetLineSeparator(FilePath);
         FileEncoding = GetFileEncoding(FilePath);
+        var newTab = new TabViewModel();
+        newTab.TabPath = resultCreate;
+        newTab.TabCode = "";
+        newTab.FileOpenOrCreate = true;
+        
+        Tabs.Add(newTab);
+        SelectedTab = newTab;
     }
     
     private void OpenFile(object parameter)
     {
         var openFileDialog = new OpenFileDialog();
-
-        if (Code.Length != 0)
-        {
-            MessageBoxResult result = MessageBox.Show("Хотите сохранить изменения перед открытием нового файла?", 
-                "Внимание", 
-                MessageBoxButton.YesNoCancel, 
-                MessageBoxImage.Warning);
-
-            if (result == MessageBoxResult.Yes)
-            {
-                Save(null);
-            }
-        }
         
         if (openFileDialog.ShowDialog() == true)
         {
             string filePath = openFileDialog.FileName;
             FileService fileService = new FileService();
             var text = fileService.ReadTextFromFile(filePath);
-            Code = text;
             _fileOpenOrCreate = true;
             _fileOpenOrCreatePath = filePath;
             FilePath = filePath;
             LineSeparator = GetLineSeparator(filePath);
             FileEncoding = GetFileEncoding(filePath);
+            var newTab = new TabViewModel();
+            newTab.TabPath = filePath;
+            newTab.TabCode = text;
+            newTab.FileOpenOrCreate = true;
+            
+            Tabs.Add(newTab);
+            SelectedTab = newTab;
         }
     }
 
@@ -270,6 +304,12 @@ public class MainWindowViewModel : ViewModelBase
         if (_fileOpenOrCreate == false)
         {
             var returnValue = fileService.Save(a);
+
+            SelectedTab.TabPath = returnValue;
+            SelectedTab.FileOpenOrCreate = true;
+            _fileOpenOrCreate = true;
+            FilePath = returnValue;
+            _fileOpenOrCreatePath = returnValue;
         }
         else
         {

@@ -39,7 +39,7 @@ public class FileService
             File.WriteAllText(filePath, code);
         }
 
-        return "успешное сохранение";
+        return saveFileDialog.FileName;
     }
 
     public string Save(string code, string path)

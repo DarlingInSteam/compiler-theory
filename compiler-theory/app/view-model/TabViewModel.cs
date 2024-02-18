@@ -29,18 +29,17 @@ public class TabViewModel : ViewModelBase
             }
         }
     }
-    
-    private string _tabTitle;
-    public string TabTitle
+
+    private bool _fileOpenOrCreate;
+
+    public bool FileOpenOrCreate
     {
-        get { return _tabTitle; }
+        get { return _fileOpenOrCreate; }
+
         set
         {
-            if (_tabTitle != value)
-            {
-                _tabTitle = value;
-                OnPropertyChanged(nameof(TabTitle));
-            }
+            _fileOpenOrCreate = value;
+            OnPropertyChanged(nameof(FileOpenOrCreate));
         }
     }
 }
