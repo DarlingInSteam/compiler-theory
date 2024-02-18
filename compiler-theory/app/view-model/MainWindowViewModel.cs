@@ -12,13 +12,27 @@ namespace compiler_theory.app.view_model;
 
 public class MainWindowViewModel : ViewModelBase
 {
+    private const string _aboutPath = "About.html";
+    private const string _helpPath = "Help.html";
+    private const string _testCode = "using System;\n\nnamespace HelloWorld\n{\n    class Hello {         \n        static void Main(string[] args)\n        {\n            string hello = \"Hello, World\";\n        }\n    }\n}";
     private RelayCommand _openFileCommand;
+    private bool _exitFlag = false;
     private string _code = "";
     private bool _fileOpenOrCreate = false;
     private string _fileOpenOrCreatePath;
     private string culture = "Russian";
     private double _fontSize = 16;
-
+    private RelayCommand _aboutCommand;
+    private RelayCommand _helpCommand;
+    public RelayCommand AboutCommand
+    {
+        get => _aboutCommand ??= new RelayCommand(_ => HtmlHelper.OpenInBrowser(_aboutPath));
+    }
+    
+    public RelayCommand HelpCommand
+    {
+        get => _helpCommand ??= new RelayCommand(_ => HtmlHelper.OpenInBrowser(_helpPath));
+    }
     private TabViewModel _selectedTab;
 
     public TabViewModel SelectedTab
@@ -167,6 +181,16 @@ public class MainWindowViewModel : ViewModelBase
         }
     }
 
+    private ICommand _testCodeInput;
+
+    public ICommand TestCodeInput
+    {
+        get
+        {
+            return _testCodeInput ?? (_testCodeInput = new RelayCommand(InputTestCode));
+        }
+    }
+    
     private ICommand _incFont;
 
     public ICommand IncFontCommand
@@ -301,19 +325,42 @@ public class MainWindowViewModel : ViewModelBase
     {
         FileService fileService = new FileService();
         var a = Code;
-        if (_fileOpenOrCreate == false)
+        if (_exitFlag == true)
         {
-            var returnValue = fileService.Save(a);
+            foreach (var tab in Tabs)
+            {
+                if (tab.FileOpenOrCreate == false)
+                {
+                    var returnValue = fileService.Save(tab.TabCode);
 
-            SelectedTab.TabPath = returnValue;
-            SelectedTab.FileOpenOrCreate = true;
-            _fileOpenOrCreate = true;
-            FilePath = returnValue;
-            _fileOpenOrCreatePath = returnValue;
+                    SelectedTab.TabPath = returnValue;
+                    SelectedTab.FileOpenOrCreate = true;
+                    _fileOpenOrCreate = true;
+                    FilePath = returnValue;
+                    _fileOpenOrCreatePath = returnValue;
+                }
+                else
+                {
+                    var returnValue = fileService.Save(tab.TabCode, tab.TabPath);
+                }
+            }
         }
         else
         {
-            var returnValue = fileService.Save(a, _fileOpenOrCreatePath);
+            if (_fileOpenOrCreate == false)
+            {
+                var returnValue = fileService.Save(a);
+
+                SelectedTab.TabPath = returnValue;
+                SelectedTab.FileOpenOrCreate = true;
+                _fileOpenOrCreate = true;
+                FilePath = returnValue;
+                _fileOpenOrCreatePath = returnValue;
+            }
+            else
+            {
+                var returnValue = fileService.Save(a, _fileOpenOrCreatePath);
+            }
         }
     }
 
@@ -335,6 +382,11 @@ public class MainWindowViewModel : ViewModelBase
         FontSize -= 1.0;
     }
 
+    private void InputTestCode(object parameter)
+    {
+        Code = _testCode;
+    }
+    
     private void IncFont(object parameter)
     {
         FontSize += 1.0;
@@ -348,9 +400,10 @@ public class MainWindowViewModel : ViewModelBase
                 "Внимание",
                 MessageBoxButton.YesNoCancel,
                 MessageBoxImage.Warning);
-
+            
             if (result == MessageBoxResult.Yes)
             {
+                _exitFlag = true;
                 Save(null);
             }
         }

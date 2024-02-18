@@ -18,13 +18,14 @@ namespace compiler_theory.app.view;
 public partial class MainWindow : Window
 {
     private CompletionWindow completionWindow;
-
+    private MainWindowViewModel _mainWindowViewModel = new MainWindowViewModel();
     public MainWindow()
     {
         InitializeComponent();
         textEditor.TextArea.TextEntering += textEditor_TextArea_TextEntering;
         textEditor.TextArea.TextEntered += textEditor_TextArea_TextEntered;
         textEditor.TextChanged += textEditor_TextChanged;
+        DataContext = _mainWindowViewModel;
     }
     
     private void Window_Drop(object sender, DragEventArgs e)
@@ -274,6 +275,18 @@ public partial class MainWindow : Window
         textEditor.Redo();
     }
 
+    private void textEditor_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+    {
+        GetCaretPosition();
+    }
+    
+    private void GetCaretPosition()
+    {
+        int offset = textEditor.CaretOffset;
+        var location = textEditor.Document.GetLocation(offset);
+        CursorPositionTextBlock.Text = $"Строка: {location.Line}, Столбец: {location.Column}";
+    }
+    
     private void Cut()
     {
         textEditor.Cut();
@@ -297,6 +310,13 @@ public partial class MainWindow : Window
     private void SelectAll()
     {
         textEditor.SelectAll();
+    }
+
+    private void MainWindow_OnClosed(object? sender, EventArgs e)
+    {
+        MainWindowViewModel asd = (MainWindowViewModel)DataContext;
+        
+        asd.ExitCommand.Execute(null);
     }
 }
 

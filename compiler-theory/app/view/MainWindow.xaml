@@ -1,4 +1,5 @@
 ﻿<Window
+    Closing="MainWindow_OnClosed"
     Drop="Window_Drop"
     Title="Compiler"
     WindowState="Maximized"
@@ -106,7 +107,7 @@
                     <MenuItem Header="Классификация грамматики" />
                     <MenuItem Header="Метод анализа" />
                     <MenuItem Header="Диагностика и нейтрализация ошибок" />
-                    <MenuItem Header="Тестовый пример" />
+                    <MenuItem Command="{Binding TestCodeInput}" Header="Тестовый пример" />
                     <MenuItem Header="Список литературы" />
                     <MenuItem Header="Исходный код программы" />
                     <MenuItem Header="Размер текста">
@@ -124,8 +125,8 @@
                 <MenuItem Header="Пуск" ToolTip="Ctrl + f5" />
 
                 <MenuItem Header="Справка">
-                    <MenuItem Header="Вызов справки" />
-                    <MenuItem Header="О программе" />
+                    <MenuItem Command="{Binding HelpCommand}" Header="Вызов справки" />
+                    <MenuItem Command="{Binding AboutCommand}" Header="О программе" />
                     <MenuItem Header="Язык">
                         <MenuItem Header="Русский" />
                         <MenuItem Command="{Binding ChangeLanguageCommand}" Header="Английский" />
@@ -172,7 +173,10 @@
                     Icon="{materialIcons:MaterialIconExt ContentPaste}"
                     ToolTip="Вставить" />
                 <MenuItem Icon="{materialIcons:MaterialIconExt Play}" ToolTip="Запустить" />
-                <MenuItem Icon="{materialIcons:MaterialIconExt About}" ToolTip="Справка" />
+                <MenuItem
+                    Command="{Binding HelpCommand}"
+                    Icon="{materialIcons:MaterialIconExt About}"
+                    ToolTip="Справка" />
             </Menu>
 
             <TabControl ItemsSource="{Binding Tabs}" SelectedItem="{Binding SelectedTab}">
@@ -205,6 +209,7 @@
                 HorizontalScrollBarVisibility="Visible"
                 LineNumbersForeground="Black"
                 Margin="20,65,20,0"
+                MouseMove="textEditor_MouseMove"
                 Name="textEditor"
                 ShowLineNumbers="True"
                 SyntaxHighlighting="C#"
@@ -264,6 +269,10 @@
                     VerticalAlignment="Bottom" />
                 <TextBlock Margin="5" Text="{Binding FileEncoding, StringFormat='FileEncoding: {0}'}" />
                 <TextBlock Margin="5" Text="{Binding FilePath, StringFormat='FilePath: {0}'}" />
+                <TextBlock
+                    Margin="5"
+                    Text="Строка: 1, Столбец: 1"
+                    x:Name="CursorPositionTextBlock" />
             </StackPanel>
         </Grid>
     </Grid>
