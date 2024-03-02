@@ -22,6 +22,19 @@ public class MainWindowViewModel : ViewModelBase
     private string _fileOpenOrCreatePath;
     private string culture = "Russian";
     private double _fontSize = 16;
+
+    private ObservableCollection<Token> _tokens;
+
+    public ObservableCollection<Token> Tokens
+    {
+        get { return _tokens; }
+        set
+        {
+            _tokens = value;
+            OnPropertyChanged(nameof(Tokens));
+        }
+    }
+    
     private RelayCommand _aboutCommand;
     private RelayCommand _helpCommand;
     public RelayCommand AboutCommand
@@ -274,6 +287,7 @@ public class MainWindowViewModel : ViewModelBase
         newTab.TabCode = Code;
         newTab.TabPath = "Новый файл";
         Tabs.Add(newTab);
+        Tokens = new ObservableCollection<Token>();
     }
     
     private void CreateFile(object parameter)
@@ -428,6 +442,30 @@ public class MainWindowViewModel : ViewModelBase
             return _changeLanguageCommand ??= new RelayCommand(ChangeLanguage);
         }
     }
+
+    private ICommand _analyzeCode;
+
+    public ICommand AnaluzeCode
+    {
+        get
+        {
+            return _analyzeCode ??= new RelayCommand(AnalizeCodeCommand);
+        }
+    }
+
+    private void AnalizeCodeCommand(object p)
+    {
+        Analyzer analyzer = new Analyzer(Code);
+        analyzer.Analyze();
+        var buff = analyzer.tokens;
+        
+        Tokens.Clear();
+        
+        foreach (var token in buff)
+        {
+            Tokens.Add(token);
+        }
+    } 
     
     private void ChangeLanguage(object p)
     {

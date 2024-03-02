@@ -47,6 +47,10 @@
             Command="{Binding DecFontCommand}"
             Key="L"
             Modifiers="Control" />
+        <KeyBinding
+            Command="{Binding AnaluzeCode}"
+            Key="F5"
+            Modifiers="Control" />
     </Window.InputBindings>
 
     <Grid>
@@ -122,7 +126,10 @@
                     </MenuItem>
                 </MenuItem>
 
-                <MenuItem Header="Пуск" ToolTip="Ctrl + f5" />
+                <MenuItem
+                    Command="{Binding AnaluzeCode}"
+                    Header="Пуск"
+                    ToolTip="Ctrl + f5" />
 
                 <MenuItem Header="Справка">
                     <MenuItem Command="{Binding HelpCommand}" Header="Вызов справки" />
@@ -212,7 +219,7 @@
                 MouseMove="textEditor_MouseMove"
                 Name="textEditor"
                 ShowLineNumbers="True"
-                SyntaxHighlighting="C#"
+                SyntaxHighlighting="Java"
                 VerticalAlignment="Stretch"
                 WordWrap="True"
                 xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit">
@@ -230,33 +237,69 @@
                 HorizontalAlignment="Stretch"
                 ResizeDirection="Auto" />
 
-            <StackPanel
-                CanVerticallyScroll="True"
-                Grid.Row="2"
-                HorizontalAlignment="Stretch">
-                <ListView
-                    FontSize="{Binding FontSize}"
-                    HorizontalAlignment="Stretch"
-                    Margin="20,0,20,0"
-                    Name="errorListViewXX"
-                    VerticalAlignment="Top">
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn
-                                DisplayMemberBinding="{Binding Error}"
-                                Header="Error"
-                                Width="Auto" />
-                            <GridViewColumn
-                                DisplayMemberBinding="{Binding Description}"
-                                Header="Description"
-                                Width="Auto" />
-                        </GridView>
-                    </ListView.View>
-                    <ListView.ItemsSource>
-                        <Binding Path="SyntaxErrors" UpdateSourceTrigger="PropertyChanged" />
-                    </ListView.ItemsSource>
-                </ListView>
-            </StackPanel>
+            <TabControl Grid.Row="2">
+                <TabItem Header="Ошибки" HorizontalAlignment="Stretch">
+                    <StackPanel CanVerticallyScroll="True" HorizontalAlignment="Stretch">
+                        <ListView
+                            FontSize="{Binding FontSize}"
+                            HorizontalAlignment="Stretch"
+                            Margin="20,0,20,0"
+                            Name="errorListViewXX"
+                            VerticalAlignment="Top">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn
+                                        DisplayMemberBinding="{Binding Error}"
+                                        Header="Error"
+                                        Width="Auto" />
+                                    <GridViewColumn
+                                        DisplayMemberBinding="{Binding Description}"
+                                        Header="Description"
+                                        Width="Auto" />
+                                </GridView>
+                            </ListView.View>
+                            <ListView.ItemsSource>
+                                <Binding Path="SyntaxErrors" UpdateSourceTrigger="PropertyChanged" />
+                            </ListView.ItemsSource>
+                        </ListView>
+                    </StackPanel>
+                </TabItem>
+                <TabItem Header="Сканер">
+                    <ListView
+                        FontSize="{Binding FontSize}"
+                        HorizontalAlignment="Stretch"
+                        ItemsSource="{Binding Tokens}"
+                        Margin="20,0,20,0">
+
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn
+                                    DisplayMemberBinding="{Binding Code}"
+                                    Header="Номер лексемы"
+                                    Width="Auto" />
+
+                                <GridViewColumn
+                                    DisplayMemberBinding="{Binding StartIndex}"
+                                    Header="Начало"
+                                    Width="Auto" />
+                                <GridViewColumn
+                                    DisplayMemberBinding="{Binding EndIndex}"
+                                    Header="Конец"
+                                    Width="Auto" />
+                                <GridViewColumn
+                                    DisplayMemberBinding="{Binding Type}"
+                                    Header="Тип"
+                                    Width="Auto" />
+                                <GridViewColumn
+                                    DisplayMemberBinding="{Binding Value}"
+                                    Header="Лексема"
+                                    Width="Auto" />
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </TabItem>
+            </TabControl>
+
 
             <StackPanel
                 Grid.Row="2"
