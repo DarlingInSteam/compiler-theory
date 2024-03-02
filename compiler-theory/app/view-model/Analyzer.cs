@@ -68,7 +68,7 @@ using System.Collections.Generic;
 
                     continue; 
                 }
-                if (Char.IsLetter(currentChar))
+                if (Char.IsLetterOrDigit(currentChar) || currentChar == '_')
                 {
                     AnalyzeIdentifier();
                 }
