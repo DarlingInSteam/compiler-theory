@@ -65,12 +65,12 @@
 - **Создание и Открытие Примеров Кода:**
     - Возможность загрузки примеров кода для изучения и экспериментов.
 
-      ![Placeholder Screenshot](compiler-theory/app/Resources/Screenshots/2.png)    
+      ![Placeholder Screenshot](compiler-theory/app/resources/Screenshots/2.png)    
 
 - **Поддержка Многозадачности:**
     - Возможность одновременного редактирования и анализа нескольких файлов.
   
-      ![Placeholder Screenshot](compiler-theory/app/Resources/Screenshots/1.png)
+      ![Placeholder Screenshot](compiler-theory/app/resources/Screenshots/1.png)
 
 
 ## Лабораторная работа №2: Разработка лексического анализатора (сканера)
@@ -113,18 +113,18 @@ Map<int, string> _map = new HashMap<int, string>();
 
 ### Диаграмма состояний сканера
 
-![Диаграмма состояний сканера](compiler-theory/app/Resources/Screenshots/13.jpg)
+![Диаграмма состояний сканера](compiler-theory/app/resources/Screenshots/13.jpg)
 
 ### Тестовые примеры
 
 1. **Тест №1.** Пример, показывающий все возможные лексемы, которые могут быть найдены лексическим анализатором.
-   ![Тест 1](compiler-theory/app/Resources/Screenshots/14.png)
+   ![Тест 1](compiler-theory/app/resources/Screenshots/14.png)
 
 2. **Тест №2.** Сложный пример.
-   ![Тест 2](compiler-theory/app/Resources/Screenshots/15.png)
+   ![Тест 2](compiler-theory/app/resources/Screenshots/15.png)
 
 3. **Тест №3.** Сложный пример.
-   ![Тест 3](compiler-theory/app/Resources/Screenshots/16.png)
+   ![Тест 3](compiler-theory/app/resources/Screenshots/16.png)
 
 ## Используемые Библиотеки
 
