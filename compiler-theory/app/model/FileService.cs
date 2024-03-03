@@ -4,7 +4,7 @@ using Microsoft.Win32;
 
 namespace compiler_theory.app.model;
 
-public class FileService
+public static class FileService
 {
     public static string ReadTextFromFile(string filePath)
     {
@@ -100,7 +100,7 @@ public class FileService
         return resultEncoding.EncodingName;
     }
     
-    public static string GetLineSeparator(string filePath)
+    public static string GetFileLineSeparator(string filePath)
     {
         using var streamReader = new StreamReader(filePath);
         const int bufferSize = 1024; 

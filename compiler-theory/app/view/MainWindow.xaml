@@ -275,13 +275,14 @@
                         FontSize="{Binding FontSize}"
                         HorizontalAlignment="Stretch"
                         ItemsSource="{Binding Tokens}"
-                        Margin="20,0,20,0">
+                        Margin="20,0,20,0"
+                        MouseDoubleClick="Control_OnMouseDoubleClick">
 
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn
                                     DisplayMemberBinding="{Binding Code}"
-                                    Header="Номер лексемы"
+                                    Header="Условный код"
                                     Width="Auto" />
 
                                 <GridViewColumn

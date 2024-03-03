@@ -23,7 +23,6 @@ public class MainWindowViewModel : ViewModelBase
     private string _fileOpenOrCreatePath;
     private string culture = "Russian";
     private double _fontSize = 16;
-    private FileService fileService = new FileService();
 
     private ObservableCollection<Token> _tokens;
 
@@ -78,7 +77,7 @@ public class MainWindowViewModel : ViewModelBase
             Code = value.TabCode;
             _fileOpenOrCreatePath = value.TabPath;
             FileService.GetFileEncoding(value.TabPath);
-            FileService.GetLineSeparator(value.TabPath);
+            FileService.GetFileLineSeparator(value.TabPath);
             FilePath = value.TabPath;
             _fileOpenOrCreate = value.FileOpenOrCreate;
             
@@ -182,7 +181,7 @@ public class MainWindowViewModel : ViewModelBase
             _fileOpenOrCreate = true;
             _fileOpenOrCreatePath = filePath;
             FilePath = filePath;
-            LineSeparator = FileService.GetLineSeparator(filePath);
+            LineSeparator = FileService.GetFileLineSeparator(filePath);
             FileEncoding = FileService.GetFileEncoding(filePath);
 
             var newTab = new TabViewModel();
@@ -294,7 +293,6 @@ public class MainWindowViewModel : ViewModelBase
     
     private void CreateFile(object parameter)
     {
-        var fileService = new FileService();
         var resultCreate = FileService.CreateFile();
         
         if (resultCreate == "Создание файла не получилось") return;
@@ -302,7 +300,7 @@ public class MainWindowViewModel : ViewModelBase
         _fileOpenOrCreate = true;
         _fileOpenOrCreatePath = resultCreate;
         FilePath = resultCreate;
-        LineSeparator = FileService.GetLineSeparator(FilePath);
+        LineSeparator = FileService.GetFileLineSeparator(FilePath);
         FileEncoding = FileService.GetFileEncoding(FilePath);
         var newTab = new TabViewModel();
         newTab.TabPath = resultCreate;
@@ -320,12 +318,11 @@ public class MainWindowViewModel : ViewModelBase
         if (openFileDialog.ShowDialog() == true)
         {
             string filePath = openFileDialog.FileName;
-            FileService fileService = new FileService();
             var text = FileService.ReadTextFromFile(filePath);
             _fileOpenOrCreate = true;
             _fileOpenOrCreatePath = filePath;
             FilePath = filePath;
-            LineSeparator = FileService.GetLineSeparator(filePath);
+            LineSeparator = FileService.GetFileLineSeparator(filePath);
             FileEncoding = FileService.GetFileEncoding(filePath);
             var newTab = new TabViewModel();
             newTab.TabPath = filePath;
@@ -339,7 +336,6 @@ public class MainWindowViewModel : ViewModelBase
 
     private void Save(object parameter)
     {
-        FileService fileService = new FileService();
         var a = Code;
         if (_exitFlag == true)
         {
@@ -382,7 +378,6 @@ public class MainWindowViewModel : ViewModelBase
 
     private void SaveAs(object parameter)
     {
-        FileService fileService = new FileService();
         var a = Code;
 
         var returnValue = FileService.SaveAs(a);
@@ -448,9 +443,9 @@ public class MainWindowViewModel : ViewModelBase
 
     private void AnalizeCodeCommand(object p)
     {
-        Analyzer analyzer = new Analyzer(Code);
-        analyzer.Analyze();
-        var buff = analyzer.Tokens;
+        Scanner scanner = new Scanner(Code);
+        scanner.Analyze();
+        var buff = scanner.Tokens;
         
         Tokens.Clear();
         

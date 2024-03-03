@@ -1,7 +1,10 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using compiler_theory.app.model;
 using compiler_theory.app.view_model;
+using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.CodeCompletion;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Editing;
@@ -110,9 +113,6 @@ public partial class MainWindow : Window
 
         return currentWord;
     }
-
-
-    
     
     private void textEditor_TextArea_TextEntered(object sender, TextCompositionEventArgs e)
     {
@@ -146,73 +146,41 @@ public partial class MainWindow : Window
     
     private void ShowCompletion()
     {
-        string currentWord = GetCurrentWord();
+        var currentWord = GetCurrentWord();
 
-        if (currentWord.Length == 0)
+        if (currentWord.Length != 0) return;
+        var suggestions = AutoCompleteSuggestions
+            .Where(entry => entry.Key.StartsWith("."))
+            .Select(entry => new MyCompletionData(entry.Key, entry.Value, "Description goes here"))
+            .ToList();
+
+        if (!suggestions.Any()) return;
+        _completionWindow = new CompletionWindow(textEditor.TextArea);
+        var data = _completionWindow.CompletionList.CompletionData;
+
+        foreach (var suggestion in suggestions)
         {
-            var suggestions = AutoCompleteSuggestions
-                .Where(entry => entry.Key.StartsWith("."))
-                .Select(entry => new MyCompletionData(entry.Key, entry.Value, "Description goes here"))
-                .ToList();
-
-            if (suggestions.Any())
-            {
-                _completionWindow = new CompletionWindow(textEditor.TextArea);
-                var data = _completionWindow.CompletionList.CompletionData;
-
-                foreach (var suggestion in suggestions)
-                {
-                    data.Add(suggestion);
-                }
-
-                _completionWindow.Show();
-                _completionWindow.Closed += (o, args) =>
-                {
-                    if (_completionWindow.CompletionList.SelectedItem != null)
-                    {
-                        var selectedText = ((ICompletionData) _completionWindow.CompletionList.SelectedItem).Text;
-                        textEditor.Document.Replace(textEditor.CaretOffset - currentWord.Length, currentWord.Length, selectedText);
-                    }
-                };
-            }
+            data.Add(suggestion);
         }
+
+        _completionWindow.Show();
+        _completionWindow.Closed += (o, args) =>
+        {
+            if (_completionWindow.CompletionList.SelectedItem == null) return;
+            var selectedText = ((ICompletionData) _completionWindow.CompletionList.SelectedItem).Text;
+            textEditor.Document.Replace(textEditor.CaretOffset - currentWord.Length, currentWord.Length, selectedText);
+        };
     }
 
     
-    // private void AnalyzeCode()
-    // {
-    //     string code = textEditor.Text;
-    //     var syntaxTree = CSharpSyntaxTree.ParseText(code);
-    //     var compilation = CSharpCompilation.Create("MyCompilation")
-    //         .AddReferences(MetadataReference.CreateFromFile(typeof(object).Assembly.Location))
-    //         .AddSyntaxTrees(syntaxTree);
-    //     var diagnostics = compilation.GetDiagnostics();
-    //
-    //     var errorList = new List<ErrorItem>(); 
-    //
-    //     foreach (var diagnostic in diagnostics.Where(d => d.Severity == DiagnosticSeverity.Error))
-    //     {
-    //         var span = diagnostic.Location.GetLineSpan();
-    //         var errorItem = new ErrorItem
-    //         {
-    //             Error = $"Error at Line {span.StartLinePosition.Line + 1}, Column {span.StartLinePosition.Character + 1}",
-    //             Description = diagnostic.GetMessage()
-    //         };
-    //         errorList.Add(errorItem);
-    //     }
-    //
-    //     // Очищаем старые ошибки и добавляем новые в ListView
-    //     errorListViewXX.Items.Clear();
-    //     foreach (var errorItem in errorList)
-    //     {
-    //         errorListViewXX.Items.Add(errorItem);
-    //     }
-    // }
+    private void AnalyzeCode()
+    {
+        
+    }
 
     private void textEditor_TextChanged(object sender, EventArgs e)
     {
-        // При каждом изменении текста в редакторе перезапускаем анализ кода и обновляем ошибки
-        // AnalyzeCode();
+        AnalyzeCode();
     }
     
     
@@ -333,6 +301,23 @@ public partial class MainWindow : Window
         MainWindowViewModel asd = (MainWindowViewModel)DataContext;
         
         asd.ExitCommand.Execute(null);
+    }
+
+    private void Control_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
+    {
+        if (sender is ListView listView && listView.SelectedItem is Token selectedToken)
+        {
+            // Найдите соответствующий текст в AvalonEdit
+            string tokenText = selectedToken.Value;
+            int startIndex = selectedToken.StartIndex - 1;
+            int endIndex = selectedToken.EndIndex - 1;
+
+            if (startIndex >= 0 && endIndex < textEditor.Document.TextLength)
+            {
+                textEditor.Select(startIndex, endIndex - startIndex + 1);
+                textEditor.ScrollToLine(textEditor.TextArea.Document.GetLocation(startIndex).Line);
+            }
+        }
     }
 }
 

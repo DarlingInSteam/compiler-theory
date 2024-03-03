@@ -1,12 +1,12 @@
 namespace compiler_theory.app.model;
 
-public class Analyzer
+public class Scanner
     {
         private readonly string _inputText;
         private int _currentIndex;
         public readonly List<Token> Tokens;
 
-        public Analyzer(string inputText)
+        public Scanner(string inputText)
         {
             _inputText = inputText;
             _currentIndex = 0;
@@ -28,7 +28,15 @@ public class Analyzer
                 if (char.IsWhiteSpace(currentChar))
                 {
                     _currentIndex++;
-                    AddToken(LexemeType.Separator, " Пробел ");
+                    
+                    Tokens.Add(new Token
+                    {
+                        Code = GetCode(" Пробел ", LexemeType.Separator),
+                        Type = LexemeType.Separator,
+                        Value = " Пробел ",
+                        StartIndex = _currentIndex,
+                        EndIndex = _currentIndex
+                    });
 
                     continue; 
                 }
@@ -115,8 +123,8 @@ public class Analyzer
                 Code = GetCode(value, type),
                 Type = type,
                 Value = value,
-                StartIndex = _currentIndex - value.Length,
-                EndIndex = _currentIndex - 1
+                StartIndex = _currentIndex - value.Length + 1,
+                EndIndex = _currentIndex
             });
         }
 
