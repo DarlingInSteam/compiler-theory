@@ -3,34 +3,6 @@ namespace compiler_theory.app.view_model;
 using System;
 using System.Collections.Generic;
 
-
-    public enum LexemeType
-    {
-        Keyword,
-        Identifier,
-        Operator,
-        Separator,
-        DataType,
-        Invalid
-    }
-
-    public class Lexeme
-    {
-        public LexemeType Type { get; set; }
-        public string Value { get; set; }
-        public int StartIndex { get; set; }
-        public int EndIndex { get; set; }
-    }
-
-    public class Token
-    {
-        public string Code { get; set; }
-        public LexemeType Type { get; set; }
-        public string Value { get; set; }
-        public int StartIndex { get; set; }
-        public int EndIndex { get; set; }
-    }
-
     public class Analyzer
     {
         private string _inputText;
