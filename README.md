@@ -20,45 +20,45 @@
 - **Меню**
 - | Пункт меню | Подпункты                                                    |
   | ------ |--------------------------------------------------------------|
-  | Файл | ![Файл](compiler-theory/app/Resources/Screenshots/9.png)     |
-  | Правка | ![Правка](compiler-theory/app/Resources/Screenshots/10.png)  |
-  | Текст | ![Текст](compiler-theory/app/Resources/Screenshots/11.png)   |
-  | Справка | ![Справка](compiler-theory/app/Resources/Screenshots/12.png) |
+  | Файл | ![Файл](compiler-theory/app/resources/Screenshots/9.png)     |
+  | Правка | ![Правка](compiler-theory/app/resources/Screenshots/10.png)  |
+  | Текст | ![Текст](compiler-theory/app/resources/Screenshots/11.png)   |
+  | Справка | ![Справка](compiler-theory/app/resources/Screenshots/12.png) |
 
 - **Базовые Операции:**
     - Открытие, создание и сохранение файлов.
     - Поддержка множества вкладок для одновременного редактирования различных файлов.
 
-      ![Placeholder Screenshot](compiler-theory/app/Resources/Screenshots/8.png)
+      ![Placeholder Screenshot](compiler-theory/app/resources/Screenshots/8.png)
 
 - **Редактирование Кода:**
     - Подсветка синтаксиса и автодополнение для улучшенной читаемости кода.
     - Возможность отмены (Undo) и повтора (Redo) действий.
     - Операции копирования, вставки, удаления и выделения текста.
   
-      ![Placeholder Screenshot](compiler-theory/app/Resources/Screenshots/7.png)
+      ![Placeholder Screenshot](compiler-theory/app/resources/Screenshots/7.png)
 
 - **Настройки Внешнего Вида:**
     - Изменение размера шрифта для удобства чтения.
   
-      ![Placeholder Screenshot](compiler-theory/app/Resources/Screenshots/6.png)
+      ![Placeholder Screenshot](compiler-theory/app/resources/Screenshots/6.png)
 
 ### Анализ Кода
 
 - **Подсветка Ошибок Компиляции:**
     - Вывод ошибок компиляции в удобном формате.
 
-      ![Placeholder Screenshot](compiler-theory/app/Resources/Screenshots/5.png)
+      ![Placeholder Screenshot](compiler-theory/app/resources/Screenshots/5.png)
       
 - **Автодополнение:**
     - Подсказки по автодополнению при вводе кода.
 
-      ![Placeholder Screenshot](compiler-theory/app/Resources/Screenshots/4.png)
+      ![Placeholder Screenshot](compiler-theory/app/resources/Screenshots/4.png)
       
 - **Семантический Анализ:**
     - Анализ кода на основе компилятора C# для определения типов и доступных членов.
     - 
-      ![Placeholder Screenshot](compiler-theory/app/Resources/Screenshots/3.png)
+      ![Placeholder Screenshot](compiler-theory/app/resources/Screenshots/3.png)
 
 ### Другие Функции
 
