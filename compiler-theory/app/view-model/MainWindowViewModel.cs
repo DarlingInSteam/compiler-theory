@@ -5,6 +5,7 @@ using System.Runtime.Intrinsics.Arm;
 using System.Text;
 using System.Windows;
 using System.Windows.Input;
+using compiler_theory.app.model;
 using Microsoft.Win32;
 using Prism.Commands;
 
@@ -76,8 +77,8 @@ public class MainWindowViewModel : ViewModelBase
             _selectedTab = value;
             Code = value.TabCode;
             _fileOpenOrCreatePath = value.TabPath;
-            fileService.GetFileEncoding(value.TabPath);
-            fileService.GetLineSeparator(value.TabPath);
+            FileService.GetFileEncoding(value.TabPath);
+            FileService.GetLineSeparator(value.TabPath);
             FilePath = value.TabPath;
             _fileOpenOrCreate = value.FileOpenOrCreate;
             
@@ -181,8 +182,8 @@ public class MainWindowViewModel : ViewModelBase
             _fileOpenOrCreate = true;
             _fileOpenOrCreatePath = filePath;
             FilePath = filePath;
-            LineSeparator = fileService.GetLineSeparator(filePath);
-            FileEncoding = fileService.GetFileEncoding(filePath);
+            LineSeparator = FileService.GetLineSeparator(filePath);
+            FileEncoding = FileService.GetFileEncoding(filePath);
 
             var newTab = new TabViewModel();
             
@@ -294,15 +295,15 @@ public class MainWindowViewModel : ViewModelBase
     private void CreateFile(object parameter)
     {
         var fileService = new FileService();
-        var resultCreate = fileService.CreateFile();
+        var resultCreate = FileService.CreateFile();
         
         if (resultCreate == "Создание файла не получилось") return;
         
         _fileOpenOrCreate = true;
         _fileOpenOrCreatePath = resultCreate;
         FilePath = resultCreate;
-        LineSeparator = fileService.GetLineSeparator(FilePath);
-        FileEncoding = fileService.GetFileEncoding(FilePath);
+        LineSeparator = FileService.GetLineSeparator(FilePath);
+        FileEncoding = FileService.GetFileEncoding(FilePath);
         var newTab = new TabViewModel();
         newTab.TabPath = resultCreate;
         newTab.TabCode = "";
@@ -320,12 +321,12 @@ public class MainWindowViewModel : ViewModelBase
         {
             string filePath = openFileDialog.FileName;
             FileService fileService = new FileService();
-            var text = fileService.ReadTextFromFile(filePath);
+            var text = FileService.ReadTextFromFile(filePath);
             _fileOpenOrCreate = true;
             _fileOpenOrCreatePath = filePath;
             FilePath = filePath;
-            LineSeparator = fileService.GetLineSeparator(filePath);
-            FileEncoding = fileService.GetFileEncoding(filePath);
+            LineSeparator = FileService.GetLineSeparator(filePath);
+            FileEncoding = FileService.GetFileEncoding(filePath);
             var newTab = new TabViewModel();
             newTab.TabPath = filePath;
             newTab.TabCode = text;
@@ -346,7 +347,7 @@ public class MainWindowViewModel : ViewModelBase
             {
                 if (tab.FileOpenOrCreate == false)
                 {
-                    var returnValue = fileService.Save(tab.TabCode);
+                    var returnValue = FileService.Save(tab.TabCode);
 
                     SelectedTab.TabPath = returnValue;
                     SelectedTab.FileOpenOrCreate = true;
@@ -356,7 +357,7 @@ public class MainWindowViewModel : ViewModelBase
                 }
                 else
                 {
-                    var returnValue = fileService.Save(tab.TabCode, tab.TabPath);
+                    var returnValue = FileService.Save(tab.TabCode, tab.TabPath);
                 }
             }
         }
@@ -364,7 +365,7 @@ public class MainWindowViewModel : ViewModelBase
         {
             if (_fileOpenOrCreate == false)
             {
-                var returnValue = fileService.Save(a);
+                var returnValue = FileService.Save(a);
 
                 SelectedTab.TabPath = returnValue;
                 SelectedTab.FileOpenOrCreate = true;
@@ -374,7 +375,7 @@ public class MainWindowViewModel : ViewModelBase
             }
             else
             {
-                var returnValue = fileService.Save(a, _fileOpenOrCreatePath);
+                var returnValue = FileService.Save(a, _fileOpenOrCreatePath);
             }
         }
     }
@@ -384,7 +385,7 @@ public class MainWindowViewModel : ViewModelBase
         FileService fileService = new FileService();
         var a = Code;
 
-        var returnValue = fileService.SaveAs(a);
+        var returnValue = FileService.SaveAs(a);
 
         if (returnValue == "Сохранение файла не получилось") return;
 

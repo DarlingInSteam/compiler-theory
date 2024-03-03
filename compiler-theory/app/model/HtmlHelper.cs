@@ -1,9 +1,9 @@
 using System.Diagnostics;
 using System.IO;
 
-namespace compiler_theory.app.view_model;
+namespace compiler_theory.app.model;
 
-public class HtmlHelper
+public static class HtmlHelper
 {
     public static void OpenInBrowser(string filePath)
     {

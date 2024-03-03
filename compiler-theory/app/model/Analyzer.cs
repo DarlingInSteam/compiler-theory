@@ -1,9 +1,6 @@
-namespace compiler_theory.app.view_model;
+namespace compiler_theory.app.model;
 
-using System;
-using System.Collections.Generic;
-
-    public class Analyzer
+public class Analyzer
     {
         private readonly string _inputText;
         private int _currentIndex;

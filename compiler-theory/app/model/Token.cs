@@ -1,4 +1,4 @@
-namespace compiler_theory.app.view_model;
+namespace compiler_theory.app.model;
 
 public class Token
 {

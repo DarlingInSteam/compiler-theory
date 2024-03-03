@@ -11,6 +11,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:materialIcons="clr-namespace:Material.Icons.WPF;assembly=Material.Icons.WPF"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:model="clr-namespace:compiler_theory.app.model"
     xmlns:vm="clr-namespace:compiler_theory.app.view_model"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
@@ -224,7 +225,7 @@
                 WordWrap="True"
                 xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit">
                 <b:Interaction.Behaviors>
-                    <vm:AvalonEditBehaviour InputText="{Binding Code}" />
+                    <model:AvalonEditBehaviour InputText="{Binding Code}" />
                 </b:Interaction.Behaviors>
             </avalonEdit:TextEditor>
 
