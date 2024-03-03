@@ -5,9 +5,9 @@ using System.Collections.Generic;
 
     public class Analyzer
     {
-        private string _inputText;
+        private readonly string _inputText;
         private int _currentIndex;
-        public List<Token> Tokens;
+        public readonly List<Token> Tokens;
 
         public Analyzer(string inputText)
         {
@@ -78,7 +78,7 @@ using System.Collections.Generic;
             AddToken(identifierType, identifier);
         }
 
-        private LexemeType GetIdentifierType(string identifier)
+        private static LexemeType GetIdentifierType(string identifier)
         {
             var keywords = new List<string> { "HashMap", "int", "string", "String", "Map", "new", "bool", "float", "byte", "short", "long", "boolean", "char" };
 
