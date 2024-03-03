@@ -188,7 +188,10 @@
                     ToolTip="Справка" />
             </Menu>
 
-            <TabControl ItemsSource="{Binding Tabs}" SelectedItem="{Binding SelectedTab}">
+            <TabControl
+                ItemsSource="{Binding Tabs}"
+                SelectedItem="{Binding SelectedTab}"
+                Style="{StaticResource MaterialDesignTabControl}">
                 <TabControl.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding TabPath}" />
