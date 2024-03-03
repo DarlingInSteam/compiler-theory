@@ -8,9 +8,9 @@ public class Analyzer
 
         public Analyzer(string inputText)
         {
-            this._inputText = inputText;
-            this._currentIndex = 0;
-            this.Tokens = new List<Token>();
+            _inputText = inputText;
+            _currentIndex = 0;
+            Tokens = new List<Token>();
         }
         
         private static LexemeType IsVariableName(string identifier)

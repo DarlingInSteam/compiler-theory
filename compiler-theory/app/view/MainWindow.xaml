@@ -1,6 +1,7 @@
 ﻿<Window
     Closing="MainWindow_OnClosed"
     Drop="Window_Drop"
+    Style="{DynamicResource MaterialDesignWindow}"
     Title="Compiler"
     WindowState="Maximized"
     mc:Ignorable="d"
@@ -220,6 +221,7 @@
                 MouseMove="textEditor_MouseMove"
                 Name="textEditor"
                 ShowLineNumbers="True"
+                Style="{StaticResource AvalonEditStyle}"
                 SyntaxHighlighting="Java"
                 VerticalAlignment="Stretch"
                 WordWrap="True"

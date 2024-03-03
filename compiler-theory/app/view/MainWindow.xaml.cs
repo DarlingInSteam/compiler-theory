@@ -12,13 +12,26 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace compiler_theory.app.view;
 
-/// <summary>
-/// Interaction logic for MainWindow.xaml
-/// </summary>
 public partial class MainWindow : Window
 {
-    private CompletionWindow completionWindow;
-    private MainWindowViewModel _mainWindowViewModel = new MainWindowViewModel();
+    private readonly Dictionary<string, string> AutoCompleteSuggestions = new Dictionary<string, string>
+    {
+        {"int", "1"},
+        {"bool", "2"},
+        {"string", "3"},
+        {"String", "3"},
+        {"Map", "4"},
+        {"new", "5"},
+        {"float", "6"},
+        {"byte", "7"},
+        {"short", "8"},
+        {"long", "9"},
+        {"char", "10"},
+        {"HashMap", "11"},
+    };
+    
+    private CompletionWindow _completionWindow;
+    private readonly MainWindowViewModel _mainWindowViewModel = new MainWindowViewModel();
     public MainWindow()
     {
         InitializeComponent();
@@ -26,6 +39,7 @@ public partial class MainWindow : Window
         textEditor.TextArea.TextEntered += textEditor_TextArea_TextEntered;
         textEditor.TextChanged += textEditor_TextChanged;
         DataContext = _mainWindowViewModel;
+        textEditor.LineNumbersForeground = Brushes.White;
     }
     
     private void Window_Drop(object sender, DragEventArgs e)
@@ -36,7 +50,6 @@ public partial class MainWindow : Window
 
             if (files.Length > 0)
             {
-                // Вызываем команду Drop для обработки перетаскивания файла
                 ((MainWindowViewModel)DataContext).DropCommand.Execute(files);
             }
         }
@@ -45,158 +58,161 @@ public partial class MainWindow : Window
     
     private void textEditor_TextArea_TextEntering(object sender, TextCompositionEventArgs e)
     {
-        
+        string currentWord = GetCurrentWord();
 
-        if (e.Text.Length > 0 && completionWindow != null)
+        if (currentWord.Length == 0)
         {
-            if (!char.IsLetterOrDigit(e.Text[0]))
+            var suggestions = AutoCompleteSuggestions
+                .Where(entry => entry.Key.StartsWith(e.Text))
+                .Select(entry => new MyCompletionData(entry.Key, entry.Value, "Description goes here"))
+                .ToList();
+
+            if (suggestions.Any())
             {
-                // Завершение слова
-                completionWindow.CompletionList.RequestInsertion(e);
+                _completionWindow = new CompletionWindow(textEditor.TextArea);
+                var data = _completionWindow.CompletionList.CompletionData;
+
+                foreach (var suggestion in suggestions)
+                {
+                    data.Add(suggestion);
+                }
+
+                _completionWindow.Show();
             }
         }
     }
     
+    private string GetCurrentWord()
+    {
+        var offset = textEditor.CaretOffset;
+        var document = textEditor.Document;
+        var line = document.GetLineByOffset(offset);
+        var lineText = document.GetText(line);
+
+        // Find the start of the current word
+        var start = offset - 1;
+
+        // Check if the start is within the bounds of the line
+        if (start < line.Offset)
+        {
+            start = line.Offset;
+        }
+
+        while (start >= line.Offset && start < lineText.Length && char.IsLetterOrDigit(lineText[start]))
+        {
+            start--;
+        }
+
+        // Extract the current word
+        var currentWord = start < offset - 1
+            ? lineText.Substring(start + 1, offset - start - 1)
+            : string.Empty;
+
+        return currentWord;
+    }
+
+
+    
+    
     private void textEditor_TextArea_TextEntered(object sender, TextCompositionEventArgs e)
     {
-        if (e.Text == ".")
+        switch (e.Text)
         {
-            // Запуск автодополнения при вводе точки
-            ShowCompletion();
-        }
-        
-        if (e.Text == "{")
-        {
-            textEditor.Document.Insert(textEditor.CaretOffset, "}");
-            textEditor.CaretOffset--; // Переместить курсор между { и }
-        }
-    
-        // Аналогично для кавычек "
-        if (e.Text == "\"")
-        {
-            textEditor.Document.Insert(textEditor.CaretOffset, "\"");
-            textEditor.CaretOffset--; // Переместить курсор между кавычками ""
-        }
-    
-        // Аналогично для одинарных кавычек '
-        if (e.Text == "'")
-        {
-            textEditor.Document.Insert(textEditor.CaretOffset, "'");
-            textEditor.CaretOffset--; // Переместить курсор между одинарными кавычками ''
+            case ".":
+                ShowCompletion();
+                break;
+            case "{":
+                textEditor.Document.Insert(textEditor.CaretOffset, "}");
+                textEditor.CaretOffset--;
+                break;
+            case "(":
+                textEditor.Document.Insert(textEditor.CaretOffset, ")");
+                textEditor.CaretOffset--;
+                break;
+            case "\"":
+                textEditor.Document.Insert(textEditor.CaretOffset, "\"");
+                textEditor.CaretOffset--;
+                break;
+            case "'":
+                textEditor.Document.Insert(textEditor.CaretOffset, "'");
+                textEditor.CaretOffset--;
+                break;
+            case "<":
+                textEditor.Document.Insert(textEditor.CaretOffset, ">");
+                textEditor.CaretOffset--;
+                break;
         }
     }
     
     private void ShowCompletion()
     {
-        var text = textEditor.Text;
-        var syntaxTree = CSharpSyntaxTree.ParseText(text);
-        var root = syntaxTree.GetRoot();
-        var compilation = CSharpCompilation.Create("MyCompilation")
-            .AddReferences(MetadataReference.CreateFromFile(typeof(object).Assembly.Location))
-            .AddSyntaxTrees(syntaxTree);
-        var semanticModel = compilation.GetSemanticModel(syntaxTree);
+        string currentWord = GetCurrentWord();
 
-        var caretPosition = textEditor.CaretOffset;
-        var token = root.FindToken(caretPosition);
-
-        var memberAccess = token.Parent as MemberAccessExpressionSyntax ?? token.Parent.Parent as MemberAccessExpressionSyntax;
-
-        if (memberAccess != null)
+        if (currentWord.Length == 0)
         {
-            // Получение типа выражения перед точкой
-            var typeInfo = semanticModel.GetTypeInfo(memberAccess.Expression);
-
-            // Получение доступных членов типа
-            var members = typeInfo.Type?.GetMembers()
-                .Where(m => m.Kind == SymbolKind.Method || m.Kind == SymbolKind.Property)
-                .Select(m => new MyCompletionData(m.Name, GetReturnType(m), GetDocumentation(m)))
+            var suggestions = AutoCompleteSuggestions
+                .Where(entry => entry.Key.StartsWith("."))
+                .Select(entry => new MyCompletionData(entry.Key, entry.Value, "Description goes here"))
                 .ToList();
 
-            if (members != null && members.Any())
+            if (suggestions.Any())
             {
-                // Отображение окна автодополнения
-                completionWindow = new CompletionWindow(textEditor.TextArea);
-                var data = completionWindow.CompletionList.CompletionData;
+                _completionWindow = new CompletionWindow(textEditor.TextArea);
+                var data = _completionWindow.CompletionList.CompletionData;
 
-                foreach (var member in members)
+                foreach (var suggestion in suggestions)
                 {
-                    data.Add(member);
+                    data.Add(suggestion);
                 }
-                completionWindow.Show();
+
+                _completionWindow.Show();
+                _completionWindow.Closed += (o, args) =>
+                {
+                    if (_completionWindow.CompletionList.SelectedItem != null)
+                    {
+                        var selectedText = ((ICompletionData) _completionWindow.CompletionList.SelectedItem).Text;
+                        textEditor.Document.Replace(textEditor.CaretOffset - currentWord.Length, currentWord.Length, selectedText);
+                    }
+                };
             }
         }
     }
 
-    private string GetDocumentation(ISymbol symbol)
-    {
-        var docComment = symbol.GetDocumentationCommentXml();
-        // Ваша логика для обработки XML-комментариев
-        // Здесь можно парсить XML-комментарии и извлекать нужную информацию
-        return docComment;
-    }
     
-    private string GetReturnType(ISymbol symbol)
-    {
-        if (symbol is IMethodSymbol methodSymbol)
-        {
-            // Для метода
-            return methodSymbol.ReturnType.ToDisplayString();
-        }
-        else if (symbol is IPropertySymbol propertySymbol)
-        {
-            // Для свойства
-            return propertySymbol.Type.ToDisplayString();
-        }
-        else
-        {
-            // Другие случаи
-            return string.Empty;
-        }
-    }
-    
-    private ImageSource GetImageForSymbol(ISymbol symbol)
-    {
-        // Ваша логика для получения изображения для символа
-        // Например, можно использовать ресурсы приложения или файлы изображений
-        // Возвращайте ImageSource для соответствующего изображения
-        return null;
-    }
-
-    
-    private void AnalyzeCode()
-    {
-        string code = textEditor.Text;
-        var syntaxTree = CSharpSyntaxTree.ParseText(code);
-        var compilation = CSharpCompilation.Create("MyCompilation")
-            .AddReferences(MetadataReference.CreateFromFile(typeof(object).Assembly.Location))
-            .AddSyntaxTrees(syntaxTree);
-        var diagnostics = compilation.GetDiagnostics();
-
-        var errorList = new List<ErrorItem>(); 
-
-        foreach (var diagnostic in diagnostics.Where(d => d.Severity == DiagnosticSeverity.Error))
-        {
-            var span = diagnostic.Location.GetLineSpan();
-            var errorItem = new ErrorItem
-            {
-                Error = $"Error at Line {span.StartLinePosition.Line + 1}, Column {span.StartLinePosition.Character + 1}",
-                Description = diagnostic.GetMessage()
-            };
-            errorList.Add(errorItem);
-        }
-
-        // Очищаем старые ошибки и добавляем новые в ListView
-        errorListViewXX.Items.Clear();
-        foreach (var errorItem in errorList)
-        {
-            errorListViewXX.Items.Add(errorItem);
-        }
-    }
+    // private void AnalyzeCode()
+    // {
+    //     string code = textEditor.Text;
+    //     var syntaxTree = CSharpSyntaxTree.ParseText(code);
+    //     var compilation = CSharpCompilation.Create("MyCompilation")
+    //         .AddReferences(MetadataReference.CreateFromFile(typeof(object).Assembly.Location))
+    //         .AddSyntaxTrees(syntaxTree);
+    //     var diagnostics = compilation.GetDiagnostics();
+    //
+    //     var errorList = new List<ErrorItem>(); 
+    //
+    //     foreach (var diagnostic in diagnostics.Where(d => d.Severity == DiagnosticSeverity.Error))
+    //     {
+    //         var span = diagnostic.Location.GetLineSpan();
+    //         var errorItem = new ErrorItem
+    //         {
+    //             Error = $"Error at Line {span.StartLinePosition.Line + 1}, Column {span.StartLinePosition.Character + 1}",
+    //             Description = diagnostic.GetMessage()
+    //         };
+    //         errorList.Add(errorItem);
+    //     }
+    //
+    //     // Очищаем старые ошибки и добавляем новые в ListView
+    //     errorListViewXX.Items.Clear();
+    //     foreach (var errorItem in errorList)
+    //     {
+    //         errorListViewXX.Items.Add(errorItem);
+    //     }
+    // }
 
     private void textEditor_TextChanged(object sender, EventArgs e)
     {
         // При каждом изменении текста в редакторе перезапускаем анализ кода и обновляем ошибки
-        AnalyzeCode();
+        // AnalyzeCode();
     }
     
     
