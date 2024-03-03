@@ -22,6 +22,7 @@ public class MainWindowViewModel : ViewModelBase
     private string _fileOpenOrCreatePath;
     private string culture = "Russian";
     private double _fontSize = 16;
+    private FileService fileService = new FileService();
 
     private ObservableCollection<Token> _tokens;
 
@@ -75,8 +76,8 @@ public class MainWindowViewModel : ViewModelBase
             _selectedTab = value;
             Code = value.TabCode;
             _fileOpenOrCreatePath = value.TabPath;
-            GetFileEncoding(value.TabPath);
-            GetLineSeparator(value.TabPath);
+            fileService.GetFileEncoding(value.TabPath);
+            fileService.GetLineSeparator(value.TabPath);
             FilePath = value.TabPath;
             _fileOpenOrCreate = value.FileOpenOrCreate;
             
@@ -180,8 +181,8 @@ public class MainWindowViewModel : ViewModelBase
             _fileOpenOrCreate = true;
             _fileOpenOrCreatePath = filePath;
             FilePath = filePath;
-            LineSeparator = GetLineSeparator(filePath);
-            FileEncoding = GetFileEncoding(filePath);
+            LineSeparator = fileService.GetLineSeparator(filePath);
+            FileEncoding = fileService.GetFileEncoding(filePath);
 
             var newTab = new TabViewModel();
             
@@ -300,8 +301,8 @@ public class MainWindowViewModel : ViewModelBase
         _fileOpenOrCreate = true;
         _fileOpenOrCreatePath = resultCreate;
         FilePath = resultCreate;
-        LineSeparator = GetLineSeparator(FilePath);
-        FileEncoding = GetFileEncoding(FilePath);
+        LineSeparator = fileService.GetLineSeparator(FilePath);
+        FileEncoding = fileService.GetFileEncoding(FilePath);
         var newTab = new TabViewModel();
         newTab.TabPath = resultCreate;
         newTab.TabCode = "";
@@ -323,8 +324,8 @@ public class MainWindowViewModel : ViewModelBase
             _fileOpenOrCreate = true;
             _fileOpenOrCreatePath = filePath;
             FilePath = filePath;
-            LineSeparator = GetLineSeparator(filePath);
-            FileEncoding = GetFileEncoding(filePath);
+            LineSeparator = fileService.GetLineSeparator(filePath);
+            FileEncoding = fileService.GetFileEncoding(filePath);
             var newTab = new TabViewModel();
             newTab.TabPath = filePath;
             newTab.TabCode = text;
@@ -425,15 +426,6 @@ public class MainWindowViewModel : ViewModelBase
         Application.Current.Shutdown();
     }
     
-    // private ICommand _changeLanguageCommand;
-    // public ICommand ChangeLanguageCommand
-    // {
-    //     get
-    //     {
-    //         return _changeLanguageCommand ??= new RelayCommand(ChangeLanguage);
-    //     }
-    // }
-    
     private ICommand _changeLanguageCommand;
     public ICommand ChangeLanguageCommand
     {
@@ -457,7 +449,7 @@ public class MainWindowViewModel : ViewModelBase
     {
         Analyzer analyzer = new Analyzer(Code);
         analyzer.Analyze();
-        var buff = analyzer.tokens;
+        var buff = analyzer.Tokens;
         
         Tokens.Clear();
         
@@ -471,73 +463,5 @@ public class MainWindowViewModel : ViewModelBase
     {
         CultureInfo newCulture = new CultureInfo("en-US");
         CultureInfo.CurrentUICulture = newCulture;
-        
-    }
-    
-    public string GetLineSeparator(string filePath)
-    {
-        using (var streamReader = new StreamReader(filePath))
-        {
-            // Читаем первые несколько байт из файла
-            int bufferSize = 1024; // Можете изменить размер буфера по вашему усмотрению
-            char[] buffer = new char[bufferSize];
-            int bytesRead = streamReader.Read(buffer, 0, bufferSize);
-
-            // Преобразуем прочитанные байты в строку
-            string firstChunk = new string(buffer, 0, bytesRead);
-
-            // Определяем сепаратор строки
-            if (firstChunk.Contains("\r\n"))
-            {
-                return "CRLF";
-            }
-            else if (firstChunk.Contains("\r"))
-            {
-                return "CR";
-            }
-            else if (firstChunk.Contains("\n"))
-            {
-                return "LF";
-            }
-            else
-            {
-                return "Unknown";
-            }
-        }
-    }
-    
-    public string GetFileEncoding(string filePath)
-    {
-        Encoding resultEncoding = null;
-        byte[] buffer = new byte[5];
-
-        using (FileStream fileStream = new FileStream(filePath, FileMode.Open))
-        {
-            fileStream.Read(buffer, 0, 5);
-            fileStream.Close();
-
-            if (buffer[0] == 0xef && buffer[1] == 0xbb && buffer[2] == 0xbf)
-            {
-                resultEncoding = Encoding.UTF8;
-            }
-            else if (buffer[0] == 0xff && buffer[1] == 0xfe)
-            {
-                resultEncoding = Encoding.Unicode;
-            }
-            else if (buffer[0] == 0xfe && buffer[1] == 0xff)
-            {
-                resultEncoding = Encoding.BigEndianUnicode;
-            }
-            else if (buffer[0] == 0 && buffer[1] == 0 && buffer[2] == 0xfe && buffer[3] == 0xff)
-            {
-                resultEncoding = Encoding.UTF32;
-            }
-            else
-            {
-                resultEncoding = Encoding.Default;
-            }
-        }
-
-        return resultEncoding.EncodingName;
     }
 }

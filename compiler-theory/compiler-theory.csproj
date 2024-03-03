@@ -10,11 +10,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="data\" />
-      <Folder Include="domain\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Page Update="view\MainWindow.xaml">
         <Generator>MSBuild:Compile</Generator>
         <XamlRuntime>Wpf</XamlRuntime>
