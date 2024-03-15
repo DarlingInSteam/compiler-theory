@@ -469,7 +469,9 @@ public class MainWindowViewModel : ViewModelBase
             Tokens.Add(token);
         }
 
-        var errors = Parser.Parse(buff);
+        Parser parser = new Parser();
+        
+        var errors = parser.Parse(buff);
         
         ParsingErrors.Clear();
         
