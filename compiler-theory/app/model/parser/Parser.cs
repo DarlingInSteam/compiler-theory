@@ -6,12 +6,17 @@ public class Parser
 {
     private List<Token> TokensBuff { get; set; }
     private List<ParsingError> Errors { get; set; }
+    private List<ParsingError> overErrors { get; set; }
+    private List<ParsingError> smallErrors { get; set; }
     private List<string> DataTypes { get; } = new List<string> {"int", "string", "String", "bool", "float", "byte", "short", "long", "boolean", "char" };
+    private int errorsCount = 0;
 
     public List<ParsingError> Parse(List<Token> tokens)
     {
         TokensBuff = new List<Token>();
         Errors = new List<ParsingError>();
+        overErrors = new List<ParsingError>();
+        smallErrors = new List<ParsingError>();
 
         // Убираем пробелы из списка токенов
         foreach (var token in tokens)
@@ -22,16 +27,31 @@ public class Parser
             }
         }
 
+        if (TokensBuff.Count == 0)
+        {
+            Errors.Add(new ParsingError
+            {
+                Message = $"Ожидался токен Map",
+                StartIndex = 0,
+                EndIndex = 0,
+                ExpectedToken = ""
+            });
+
+            return Errors;
+        }
+        
         if (TokensBuff.Count > 18)
         {
             for (int i = 18; i < TokensBuff.Count; i++)
             {
-                Errors.Add(new ParsingError
+                errorsCount += 1;
+                overErrors.Add(new ParsingError
                 {
                     Message = "Недопустимый токен",
                     StartIndex = TokensBuff[i].StartIndex,
                     EndIndex = TokensBuff[i].EndIndex,
-                    ExpectedToken = TokensBuff[i].Value
+                    ExpectedToken = TokensBuff[i].Value,
+                    NumberOfError = errorsCount
                 });
             }
         }
@@ -62,17 +82,19 @@ public class Parser
                     18 => ";"
                 };
 
-                Errors.Add(new ParsingError
+                errorsCount += 1;
+                
+                smallErrors.Add(new ParsingError
                 {
-                    Message = $"Ожидался токен '{expectedToken}', но достигнут конец ввода",
+                    Message = $"Ожидался токен '{expectedToken}'",
                     StartIndex = tokens.Count > 0 ? tokens[tokens.Count - 1].EndIndex + 1 : 0,
                     EndIndex = tokens.Count > 0 ? tokens[tokens.Count - 1].EndIndex + 1 : 0,
-                    ExpectedToken = expectedToken
+                    ExpectedToken = expectedToken,
+                    NumberOfError = errorsCount
                 });
             }
         }
         
-        // Проверка каждого ожидаемого токена
         CheckExpectedToken("Map");
         CheckExpectedToken("<");
         CheckExpectedToken("Data type");
@@ -92,6 +114,22 @@ public class Parser
         CheckExpectedToken(")");
         CheckExpectedToken(";");
 
+        if (smallErrors.Count > 0)
+        {
+            foreach (var error in smallErrors)
+            {
+                Errors.Add(error);
+            }
+        }
+
+        if (overErrors.Count > 0)
+        {
+            foreach (var error in overErrors)
+            {
+                Errors.Add(error);
+            }
+        }
+        
         return Errors;
     }
 
@@ -108,12 +146,15 @@ public class Parser
                 {
                     if (token.Type != LexemeType.Identifier)
                     {
+                        errorsCount += 1;
+                        
                         Errors.Add(new ParsingError
                         {
                             Message = $"Ожидалось '{expected}'",
                             StartIndex = token.StartIndex,
                             EndIndex = token.EndIndex,
-                            ExpectedToken = token.Value
+                            ExpectedToken = token.Value,
+                            NumberOfError = errorsCount
                         });
                     }
 
@@ -123,12 +164,15 @@ public class Parser
                 {
                     if (!DataTypes.Contains(token.Value))
                     {
+                        errorsCount += 1;
+                        
                         Errors.Add(new ParsingError
                         {
                             Message = $"Ожидалось Data type",
                             StartIndex = token.StartIndex,
                             EndIndex = token.EndIndex,
-                            ExpectedToken = token.Value
+                            ExpectedToken = token.Value,
+                            NumberOfError = errorsCount
                         });
                     }
 
@@ -138,28 +182,21 @@ public class Parser
                 {
                     if (token.Value != expected)
                     {
+                        errorsCount += 1;
+                        
                         Errors.Add(new ParsingError
                         {
                             Message = $"Ожидалось '{expected}'",
                             StartIndex = token.StartIndex,
                             EndIndex = token.EndIndex,
-                            ExpectedToken = token.Value
+                            ExpectedToken = token.Value,
+                            NumberOfError = errorsCount
                         });
                     }
 
                     break;
                 }
             }
-        }
-        else
-        {
-            Errors.Add(new ParsingError
-            {
-                Message = $"Ожидался токен '{expected}', но получен пустой ввод",
-                StartIndex = 0,
-                EndIndex = 0,
-                ExpectedToken = ""
-            });
         }
     }
 }

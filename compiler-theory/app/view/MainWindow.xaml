@@ -244,72 +244,79 @@
                 ResizeDirection="Auto" />
 
             <TabControl Grid.Row="2">
-                <TabItem Header="Ошибки" HorizontalAlignment="Stretch">
-                    <StackPanel CanVerticallyScroll="True" HorizontalAlignment="Stretch">
-                        <ListView
-                            FontSize="{Binding FontSize}"
-                            HorizontalAlignment="Stretch"
-                            ItemsSource="{Binding ParsingErrors}"
-                            Margin="20,0,20,0"
-                            VerticalAlignment="Top">
-                            <ListView.View>
-                                <GridView>
-                                    <GridViewColumn
-                                        DisplayMemberBinding="{Binding StartIndex}"
-                                        Header="Начало"
-                                        Width="Auto" />
-                                    <GridViewColumn
-                                        DisplayMemberBinding="{Binding EndIndex}"
-                                        Header="Конец"
-                                        Width="Auto" />
-                                    <GridViewColumn
-                                        DisplayMemberBinding="{Binding Message}"
-                                        Header="Сообщение"
-                                        Width="Auto" />
-                                    <GridViewColumn
-                                        DisplayMemberBinding="{Binding ExpectedToken}"
-                                        Header="Токен"
-                                        Width="Auto" />
-                                </GridView>
-                            </ListView.View>
-                        </ListView>
-                    </StackPanel>
-                </TabItem>
-                <TabItem Header="Сканер">
-                    <ListView
+                <TabItem Header="Парсер">
+                    <DataGrid
+                        AutoGenerateColumns="False"
+                        CanUserAddRows="False"
+                        CanUserDeleteRows="False"
                         FontSize="{Binding FontSize}"
                         HorizontalAlignment="Stretch"
+                        IsReadOnly="True"
+                        ItemsSource="{Binding ParsingErrors}"
+                        Margin="20,0,20,0"
+                        VerticalAlignment="Top"
+                        VerticalScrollBarVisibility="Visible">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn
+                                Binding="{Binding NumberOfError}"
+                                Header="Номер ошибки"
+                                Width="Auto" />
+                            <DataGridTextColumn
+                                Binding="{Binding StartIndex}"
+                                Header="Начало"
+                                Width="Auto" />
+                            <DataGridTextColumn
+                                Binding="{Binding EndIndex}"
+                                Header="Конец"
+                                Width="Auto" />
+                            <DataGridTextColumn
+                                Binding="{Binding Message}"
+                                Header="Сообщение"
+                                Width="Auto" />
+                            <DataGridTextColumn
+                                Binding="{Binding ExpectedToken}"
+                                Header="Токен"
+                                Width="Auto" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </TabItem>
+
+                <TabItem Header="Сканер">
+                    <DataGrid
+                        AutoGenerateColumns="False"
+                        CanUserAddRows="False"
+                        CanUserDeleteRows="False"
+                        FontSize="{Binding FontSize}"
+                        HorizontalAlignment="Stretch"
+                        IsReadOnly="True"
                         ItemsSource="{Binding Tokens}"
                         Margin="20,0,20,0"
                         MouseDoubleClick="Control_OnMouseDoubleClick">
-
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn
-                                    DisplayMemberBinding="{Binding Code}"
-                                    Header="Условный код"
-                                    Width="Auto" />
-
-                                <GridViewColumn
-                                    DisplayMemberBinding="{Binding StartIndex}"
-                                    Header="Начало"
-                                    Width="Auto" />
-                                <GridViewColumn
-                                    DisplayMemberBinding="{Binding EndIndex}"
-                                    Header="Конец"
-                                    Width="Auto" />
-                                <GridViewColumn
-                                    DisplayMemberBinding="{Binding Type}"
-                                    Header="Тип"
-                                    Width="Auto" />
-                                <GridViewColumn
-                                    DisplayMemberBinding="{Binding Value}"
-                                    Header="Лексема"
-                                    Width="Auto" />
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn
+                                Binding="{Binding Code}"
+                                Header="Условный код"
+                                Width="Auto" />
+                            <DataGridTextColumn
+                                Binding="{Binding StartIndex}"
+                                Header="Начало"
+                                Width="Auto" />
+                            <DataGridTextColumn
+                                Binding="{Binding EndIndex}"
+                                Header="Конец"
+                                Width="Auto" />
+                            <DataGridTextColumn
+                                Binding="{Binding Type}"
+                                Header="Тип"
+                                Width="Auto" />
+                            <DataGridTextColumn
+                                Binding="{Binding Value}"
+                                Header="Лексема"
+                                Width="Auto" />
+                        </DataGrid.Columns>
+                    </DataGrid>
                 </TabItem>
+
             </TabControl>
 
 
