@@ -6,6 +6,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using compiler_theory.app.model;
+using compiler_theory.app.model.parser;
 using Microsoft.Win32;
 using Prism.Commands;
 
@@ -33,6 +34,19 @@ public class MainWindowViewModel : ViewModelBase
         {
             _tokens = value;
             OnPropertyChanged(nameof(Tokens));
+        }
+    }
+
+    private ObservableCollection<ParsingError> _parsingErrors;
+
+    public ObservableCollection<ParsingError> ParsingErrors
+    {
+        get { return _parsingErrors; }
+
+        set
+        {
+            _parsingErrors = value;
+            OnPropertyChanged(nameof(ParsingError));
         }
     }
     
@@ -289,6 +303,7 @@ public class MainWindowViewModel : ViewModelBase
         newTab.TabPath = "Новый файл";
         Tabs.Add(newTab);
         Tokens = new ObservableCollection<Token>();
+        ParsingErrors = new ObservableCollection<ParsingError>();
     }
     
     private void CreateFile(object parameter)
@@ -452,6 +467,15 @@ public class MainWindowViewModel : ViewModelBase
         foreach (var token in buff)
         {
             Tokens.Add(token);
+        }
+
+        var errors = Parser.Parse(buff);
+        
+        ParsingErrors.Clear();
+        
+        foreach (var error in errors)
+        {
+            ParsingErrors.Add(error);
         }
     } 
     

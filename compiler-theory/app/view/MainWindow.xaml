@@ -249,24 +249,29 @@
                         <ListView
                             FontSize="{Binding FontSize}"
                             HorizontalAlignment="Stretch"
+                            ItemsSource="{Binding ParsingErrors}"
                             Margin="20,0,20,0"
-                            Name="errorListViewXX"
                             VerticalAlignment="Top">
                             <ListView.View>
                                 <GridView>
                                     <GridViewColumn
-                                        DisplayMemberBinding="{Binding Error}"
-                                        Header="Error"
+                                        DisplayMemberBinding="{Binding StartIndex}"
+                                        Header="Начало"
                                         Width="Auto" />
                                     <GridViewColumn
-                                        DisplayMemberBinding="{Binding Description}"
-                                        Header="Description"
+                                        DisplayMemberBinding="{Binding EndIndex}"
+                                        Header="Конец"
+                                        Width="Auto" />
+                                    <GridViewColumn
+                                        DisplayMemberBinding="{Binding Message}"
+                                        Header="Сообщение"
+                                        Width="Auto" />
+                                    <GridViewColumn
+                                        DisplayMemberBinding="{Binding ExpectedToken}"
+                                        Header="Токен"
                                         Width="Auto" />
                                 </GridView>
                             </ListView.View>
-                            <ListView.ItemsSource>
-                                <Binding Path="SyntaxErrors" UpdateSourceTrigger="PropertyChanged" />
-                            </ListView.ItemsSource>
                         </ListView>
                     </StackPanel>
                 </TabItem>
