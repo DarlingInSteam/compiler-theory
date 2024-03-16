@@ -470,7 +470,7 @@ public class MainWindowViewModel : ViewModelBase
         }
 
         Parser parser = new Parser();
-        
+
         var errors = parser.Parse(buff);
         
         ParsingErrors.Clear();

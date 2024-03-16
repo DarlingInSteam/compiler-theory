@@ -7,4 +7,5 @@ public class ParsingError
     public int StartIndex { get; set; }
     public int EndIndex { get; set; }
     public string ExpectedToken { get; set; }
+    public string UnexpectedToken { get; set; }
 }

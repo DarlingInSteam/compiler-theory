@@ -18,7 +18,6 @@ public class Parser
         overErrors = new List<ParsingError>();
         smallErrors = new List<ParsingError>();
 
-        // Убираем пробелы из списка токенов
         foreach (var token in tokens)
         {
             if (token.Code != "13")
@@ -129,6 +128,19 @@ public class Parser
                 Errors.Add(error);
             }
         }
+
+        if (errorsCount == 0)
+        {
+            Errors.Add(new ParsingError
+            {
+                Message = "В строке нет ошибок",
+                StartIndex = 0,
+                EndIndex = 0,
+                ExpectedToken = "Good",
+                NumberOfError = 0
+            });
+        }
+        
         
         return Errors;
     }

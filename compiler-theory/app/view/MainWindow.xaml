@@ -291,7 +291,8 @@
                         IsReadOnly="True"
                         ItemsSource="{Binding Tokens}"
                         Margin="20,0,20,0"
-                        MouseDoubleClick="Control_OnMouseDoubleClick">
+                        MouseDoubleClick="Control_OnMouseDoubleClick"
+                        PreviewMouseDoubleClick="Control_OnMouseDoubleClick">
                         <DataGrid.Columns>
                             <DataGridTextColumn
                                 Binding="{Binding Code}"
@@ -335,6 +336,7 @@
                     Margin="5"
                     Text="Строка: 1, Столбец: 1"
                     x:Name="CursorPositionTextBlock" />
+                <TextBlock Margin="5" Text="{Binding ParsingErrors.Count, StringFormat='Errors: {0}'}" />
             </StackPanel>
         </Grid>
     </Grid>
