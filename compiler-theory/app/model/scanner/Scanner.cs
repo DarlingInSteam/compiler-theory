@@ -1,11 +1,18 @@
 namespace compiler_theory.app.model;
 
+/// <summary>
+/// The Scanner class is responsible for scanning the input text and generating a list of tokens.
+/// </summary>
 public class Scanner
     {
         private readonly string _inputText;
         private int _currentIndex;
         public readonly List<Token> Tokens;
 
+        /// <summary>
+        /// Initializes a new instance of the Scanner class with the specified input text.
+        /// </summary>
+        /// <param name="inputText">The input text to scan.</param>
         public Scanner(string inputText)
         {
             _inputText = inputText;
@@ -13,12 +20,20 @@ public class Scanner
             Tokens = new List<Token>();
         }
         
+        /// <summary>
+        /// Determines whether the specified identifier is a variable name.
+        /// </summary>
+        /// <param name="identifier">The identifier to check.</param>
+        /// <returns>A LexemeType indicating whether the identifier is a variable name.</returns>
         private static LexemeType IsVariableName(string identifier)
         {
             if (char.IsLetter(identifier[0]) != false) return LexemeType.Identifier;
             return identifier[0] == '_' ? LexemeType.Identifier : LexemeType.Invalid;
         }
         
+        /// <summary>
+        /// Analyzes the input text and generates a list of tokens.
+        /// </summary>
         public void Analyze()
         {
             while (_currentIndex < _inputText.Length)

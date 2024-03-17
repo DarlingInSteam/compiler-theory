@@ -1,33 +1,43 @@
 using System.Security.Claims;
 
-namespace compiler_theory.app.model.parser;
-
-public class CodeFix
+namespace compiler_theory.app.model.parser
 {
-    public static string Fix(string code, List<ParsingError> parsingErrors)
+    /// <summary>
+    /// The CodeFix class provides a method for fixing code based on a list of parsing errors.
+    /// </summary>
+    public class CodeFix
     {
-        string codeBuff = code;
-        
-        foreach (var parsingError in parsingErrors)
+        /// <summary>
+        /// Fixes the specified code based on the provided list of parsing errors.
+        /// </summary>
+        /// <param name="code">The code to fix.</param>
+        /// <param name="parsingErrors">The list of parsing errors.</param>
+        /// <returns>The fixed code.</returns>
+        public static string Fix(string code, List<ParsingError> parsingErrors)
         {
-            if (parsingError.ErrorToken != "<EOF>")
+            string codeBuff = code;
+
+            foreach (var parsingError in parsingErrors)
             {
-                codeBuff = codeBuff.Replace(parsingError.ErrorToken, parsingError.NeedToken);
-            }
-            else
-            {
-                if (parsingError.NeedToken == "HashMap")
+                if (parsingError.ErrorToken != "<EOF>")
                 {
-                    codeBuff += " ";
-                    codeBuff += parsingError.NeedToken;
+                    codeBuff = codeBuff.Replace(parsingError.ErrorToken, parsingError.NeedToken);
                 }
                 else
                 {
-                    codeBuff += parsingError.NeedToken;
+                    if (parsingError.NeedToken == "HashMap")
+                    {
+                        codeBuff += " ";
+                        codeBuff += parsingError.NeedToken;
+                    }
+                    else
+                    {
+                        codeBuff += parsingError.NeedToken;
+                    }
                 }
             }
-        }
 
-        return codeBuff;
+            return codeBuff;
+        }
     }
 }

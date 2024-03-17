@@ -2,6 +2,9 @@ using System.Windows.Documents;
 
 namespace compiler_theory.app.model.parser;
 
+/// <summary>
+/// The Scanner class is responsible for scanning the input text and generating a list of tokens.
+/// </summary>
 public class Parser
 {
     private List<Token> _tokens;
@@ -12,6 +15,12 @@ public class Parser
     private List<string> _operators;
     private int _currentToken;
 
+    
+    /// <summary>
+    /// Initializes a new instance of the Parser class with the specified list of tokens.
+    /// </summary>
+    /// <param name="tokens">The list of tokens to parse.</param>
+    /// <param name="currentToken">The index of the current token in the list of tokens.</param>
     public Parser(List<Token> tokens, int currentToken = 0)
     {
         _tokens = tokens;
@@ -27,6 +36,10 @@ public class Parser
             { "=" };
     }
 
+    /// <summary>
+    /// Parses the list of tokens and returns a list of parsing errors.
+    /// </summary>
+    /// <returns>A list of parsing errors.</returns>
     public List<ParsingError> Parse()
     {
         List<ParsingError> errors = new List<ParsingError>();
@@ -50,6 +63,10 @@ public class Parser
         return _parsingErrors;
     }
 
+    /// <summary>
+    /// Parses a statement and returns a list of parsing errors.
+    /// </summary>
+    /// <returns>A list of parsing errors.</returns>
     private List<ParsingError> ParseStatement()
     {
         List<ParsingError> errors = new List<ParsingError>();
@@ -344,6 +361,9 @@ public class Parser
         return errors;
     }
 
+    /// <summary>
+    /// Skips to the next statement in the list of tokens.
+    /// </summary>
     private void SkipToNextStatement()
     {
         while (_currentToken < _tokens.Count && _tokens[_currentToken].Code != "15")
@@ -357,6 +377,11 @@ public class Parser
         }
     }
 
+    /// <summary>
+    /// Determines whether the specified value is an identifier.
+    /// </summary>
+    /// <param name="value">The value to check.</param>
+    /// <returns>A boolean indicating whether the value is an identifier.</returns>
     private bool IsIdentifier(string value)
     {
         // Проверка на соответствие идентификатора (имени переменной)
@@ -364,16 +389,31 @@ public class Parser
         return !_dataTypes.Contains(value) && !_keyWords.Contains(value) && !_signs.Contains(value) && !_operators.Contains(value);
     }
 
+    /// <summary>
+    /// Gets the value of the token at the specified index.
+    /// </summary>
+    /// <param name="index">The index of the token.</param>
+    /// <returns>The value of the token.</returns>
     private string GetTokenValue(int index)
     {
         return index < _tokens.Count ? _tokens[index].Value : "Конец входной строки";
     }
 
+    /// <summary>
+    /// Gets the start index of the token at the specified index.
+    /// </summary>
+    /// <param name="index">The index of the token.</param>
+    /// <returns>The start index of the token.</returns>
     private int GetTokenStartIndex(int index)
     {
         return index < _tokens.Count ? _tokens[index].StartIndex : -1;
     }
 
+    /// <summary>
+    /// Gets the end index of the token at the specified index.
+    /// </summary>
+    /// <param name="index">The index of the token.</param>
+    /// <returns>The end index of the token.</returns>
     private int GetTokenEndIndex(int index)
     {
         return index < _tokens.Count ? _tokens[index].EndIndex : -1;

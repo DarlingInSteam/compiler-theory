@@ -44,10 +44,6 @@
     </ItemGroup>
     
     <ItemGroup>
-      <Folder Include="app\model\state\" />
-    </ItemGroup>
-    
-    <ItemGroup>
       <Content Include="MapParser.g4" />
     </ItemGroup>
 </Project>

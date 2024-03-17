@@ -5,6 +5,9 @@ using compiler_theory.app.model.parser;
 
 namespace compiler_theory.app.model.parser;
 
+/// <summary>
+/// Custom error listener for syntax errors during parsing.
+/// </summary>
 class ErrorListener : BaseErrorListener
 {
     public List<ParsingError> errors = new List<ParsingError>();
@@ -43,6 +46,9 @@ class ErrorListener : BaseErrorListener
     }
 }
 
+/// <summary>
+/// Custom error listener for lexer errors.
+/// </summary>
 class ErrorLexerListener : IAntlrErrorListener<int>
 {
     public List<Token> errors = new List<Token>();
@@ -61,30 +67,48 @@ class ErrorLexerListener : IAntlrErrorListener<int>
     }
 }
 
+/// <summary>
+/// Class for handling lexer and parsing errors.
+/// </summary>
 public class AntlrErrors
 {
     private List<Token> LexerErrors;
     private List<ParsingError> ParsingErrors;
     
+    /// <summary>
+    /// Initializes a new instance of the AntlrErrors class.
+    /// </summary>
     public AntlrErrors(List<Token> lexerErrors, List<ParsingError> parsingErrors)
     {
         LexerErrors = lexerErrors;
         ParsingErrors = parsingErrors;
     }
 
+    /// <summary>
+    /// Gets the lexer errors.
+    /// </summary>
     public List<Token> GetLexerErrors()
     {
         return LexerErrors;
     }
 
+    /// <summary>
+    /// Gets the parsing errors.
+    /// </summary>
     public List<ParsingError> GetParsingErrors()
     {
         return ParsingErrors;
     }
 }
 
+/// <summary>
+/// Class for parsing code using Antlr.
+/// </summary>
 public class AntlrParser
 {
+    /// <summary>
+    /// Parses the specified code and returns the lexer and parsing errors.
+    /// </summary>
     public AntlrErrors Parse(string code)
     {
         ICharStream inputStream = CharStreams.fromString(code);
