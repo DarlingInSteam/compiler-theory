@@ -25,13 +25,13 @@ namespace compiler_theory.app.model.parser
                 }
                 else
                 {
-                    if (parsingError.NeedToken == "HashMap")
+                    if (parsingError.NeedToken == "Char" || parsingError.NeedToken == "," || parsingError.NeedToken == "<" || parsingError.NeedToken == ">" || parsingError.NeedToken == "(" || parsingError.NeedToken == ")" || parsingError.NeedToken == ";")
                     {
-                        codeBuff += " ";
                         codeBuff += parsingError.NeedToken;
                     }
                     else
                     {
+                        codeBuff += " ";
                         codeBuff += parsingError.NeedToken;
                     }
                 }

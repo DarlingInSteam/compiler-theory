@@ -483,7 +483,6 @@ public class MainWindowViewModel : ViewModelBase
         var a = new AntlrParser();
         var buff = a.Parse(Code);
         Code = CodeFix.Fix(Code, buff.GetParsingErrors());
-        Console.WriteLine(Code);
     }
 
     private void AnalyzeCodeCommand(object p)

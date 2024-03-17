@@ -37,28 +37,29 @@ public partial class MapParserParser : Parser {
 	protected static PredictionContextCache sharedContextCache = new PredictionContextCache();
 	public const int
 		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, T__6=7, T__7=8, T__8=9, 
-		MAP=10, FB=11, LB=12, COMMA=13, EQUAL=14, NEW=15, HASHMAP=16, LP=17, RP=18, 
-		SEMICOLON=19, IDENTIFIER=20, WS=21;
+		NEWLINE=10, MAP=11, FB=12, LB=13, COMMA=14, EQUAL=15, NEW=16, HASHMAP=17, 
+		LP=18, RP=19, SEMICOLON=20, IDENTIFIER=21, WS=22;
 	public const int
-		RULE_map = 0, RULE_fb1 = 1, RULE_datatype1 = 2, RULE_comma1 = 3, RULE_datatype2 = 4, 
-		RULE_lb1 = 5, RULE_name = 6, RULE_ravno = 7, RULE_new = 8, RULE_hashmap = 9, 
-		RULE_fb2 = 10, RULE_datatype3 = 11, RULE_comma2 = 12, RULE_datatype4 = 13, 
-		RULE_lb2 = 14, RULE_lp = 15, RULE_rp = 16, RULE_semicolon = 17, RULE_dataType = 18;
+		RULE_prog = 0, RULE_map = 1, RULE_fb1 = 2, RULE_datatype1 = 3, RULE_comma1 = 4, 
+		RULE_datatype2 = 5, RULE_lb1 = 6, RULE_name = 7, RULE_ravno = 8, RULE_new = 9, 
+		RULE_hashmap = 10, RULE_fb2 = 11, RULE_datatype3 = 12, RULE_comma2 = 13, 
+		RULE_datatype4 = 14, RULE_lb2 = 15, RULE_lp = 16, RULE_rp = 17, RULE_semicolon = 18, 
+		RULE_dataType = 19;
 	public static readonly string[] ruleNames = {
-		"map", "fb1", "datatype1", "comma1", "datatype2", "lb1", "name", "ravno", 
-		"new", "hashmap", "fb2", "datatype3", "comma2", "datatype4", "lb2", "lp", 
-		"rp", "semicolon", "dataType"
+		"prog", "map", "fb1", "datatype1", "comma1", "datatype2", "lb1", "name", 
+		"ravno", "new", "hashmap", "fb2", "datatype3", "comma2", "datatype4", 
+		"lb2", "lp", "rp", "semicolon", "dataType"
 	};
 
 	private static readonly string[] _LiteralNames = {
 		null, "'Int'", "'String'", "'Bool'", "'Float'", "'Byte'", "'Short'", "'Long'", 
-		"'Boolean'", "'Char'", "'Map'", "'<'", "'>'", "','", "'='", "'new'", "'HashMap'", 
-		"'('", "')'", "';'"
+		"'Boolean'", "'Char'", null, "'Map'", "'<'", "'>'", "','", "'='", "'new'", 
+		"'HashMap'", "'('", "')'", "';'"
 	};
 	private static readonly string[] _SymbolicNames = {
-		null, null, null, null, null, null, null, null, null, null, "MAP", "FB", 
-		"LB", "COMMA", "EQUAL", "NEW", "HASHMAP", "LP", "RP", "SEMICOLON", "IDENTIFIER", 
-		"WS"
+		null, null, null, null, null, null, null, null, null, null, "NEWLINE", 
+		"MAP", "FB", "LB", "COMMA", "EQUAL", "NEW", "HASHMAP", "LP", "RP", "SEMICOLON", 
+		"IDENTIFIER", "WS"
 	};
 	public static readonly IVocabulary DefaultVocabulary = new Vocabulary(_LiteralNames, _SymbolicNames);
 
@@ -92,6 +93,79 @@ public partial class MapParserParser : Parser {
 		Interpreter = new ParserATNSimulator(this, _ATN, decisionToDFA, sharedContextCache);
 	}
 
+	public partial class ProgContext : ParserRuleContext {
+		[System.Diagnostics.DebuggerNonUserCode] public MapContext[] map() {
+			return GetRuleContexts<MapContext>();
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public MapContext map(int i) {
+			return GetRuleContext<MapContext>(i);
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] NEWLINE() { return GetTokens(MapParserParser.NEWLINE); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode NEWLINE(int i) {
+			return GetToken(MapParserParser.NEWLINE, i);
+		}
+		public ProgContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_prog; } }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void EnterRule(IParseTreeListener listener) {
+			IMapParserListener typedListener = listener as IMapParserListener;
+			if (typedListener != null) typedListener.EnterProg(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void ExitRule(IParseTreeListener listener) {
+			IMapParserListener typedListener = listener as IMapParserListener;
+			if (typedListener != null) typedListener.ExitProg(this);
+		}
+	}
+
+	[RuleVersion(0)]
+	public ProgContext prog() {
+		ProgContext _localctx = new ProgContext(Context, State);
+		EnterRule(_localctx, 0, RULE_prog);
+		int _la;
+		try {
+			EnterOuterAlt(_localctx, 1);
+			{
+			State = 44;
+			ErrorHandler.Sync(this);
+			_la = TokenStream.LA(1);
+			do {
+				{
+				{
+				State = 40;
+				map();
+				State = 42;
+				ErrorHandler.Sync(this);
+				_la = TokenStream.LA(1);
+				if (_la==NEWLINE) {
+					{
+					State = 41;
+					Match(NEWLINE);
+					}
+				}
+
+				}
+				}
+				State = 46;
+				ErrorHandler.Sync(this);
+				_la = TokenStream.LA(1);
+			} while ( _la==MAP );
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			ErrorHandler.ReportError(this, re);
+			ErrorHandler.Recover(this, re);
+		}
+		finally {
+			ExitRule();
+		}
+		return _localctx;
+	}
+
 	public partial class MapContext : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode MAP() { return GetToken(MapParserParser.MAP, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public Fb1Context fb1() {
@@ -117,13 +191,13 @@ public partial class MapParserParser : Parser {
 	[RuleVersion(0)]
 	public MapContext map() {
 		MapContext _localctx = new MapContext(Context, State);
-		EnterRule(_localctx, 0, RULE_map);
+		EnterRule(_localctx, 2, RULE_map);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 38;
+			State = 48;
 			Match(MAP);
-			State = 39;
+			State = 49;
 			fb1();
 			}
 		}
@@ -163,13 +237,13 @@ public partial class MapParserParser : Parser {
 	[RuleVersion(0)]
 	public Fb1Context fb1() {
 		Fb1Context _localctx = new Fb1Context(Context, State);
-		EnterRule(_localctx, 2, RULE_fb1);
+		EnterRule(_localctx, 4, RULE_fb1);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 41;
+			State = 51;
 			Match(FB);
-			State = 42;
+			State = 52;
 			datatype1();
 			}
 		}
@@ -211,13 +285,13 @@ public partial class MapParserParser : Parser {
 	[RuleVersion(0)]
 	public Datatype1Context datatype1() {
 		Datatype1Context _localctx = new Datatype1Context(Context, State);
-		EnterRule(_localctx, 4, RULE_datatype1);
+		EnterRule(_localctx, 6, RULE_datatype1);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 44;
+			State = 54;
 			dataType();
-			State = 45;
+			State = 55;
 			comma1();
 			}
 		}
@@ -257,13 +331,13 @@ public partial class MapParserParser : Parser {
 	[RuleVersion(0)]
 	public Comma1Context comma1() {
 		Comma1Context _localctx = new Comma1Context(Context, State);
-		EnterRule(_localctx, 6, RULE_comma1);
+		EnterRule(_localctx, 8, RULE_comma1);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 47;
+			State = 57;
 			Match(COMMA);
-			State = 48;
+			State = 58;
 			datatype2();
 			}
 		}
@@ -305,13 +379,13 @@ public partial class MapParserParser : Parser {
 	[RuleVersion(0)]
 	public Datatype2Context datatype2() {
 		Datatype2Context _localctx = new Datatype2Context(Context, State);
-		EnterRule(_localctx, 8, RULE_datatype2);
+		EnterRule(_localctx, 10, RULE_datatype2);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 50;
+			State = 60;
 			dataType();
-			State = 51;
+			State = 61;
 			lb1();
 			}
 		}
@@ -351,13 +425,13 @@ public partial class MapParserParser : Parser {
 	[RuleVersion(0)]
 	public Lb1Context lb1() {
 		Lb1Context _localctx = new Lb1Context(Context, State);
-		EnterRule(_localctx, 10, RULE_lb1);
+		EnterRule(_localctx, 12, RULE_lb1);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 53;
+			State = 63;
 			Match(LB);
-			State = 54;
+			State = 64;
 			name();
 			}
 		}
@@ -397,13 +471,13 @@ public partial class MapParserParser : Parser {
 	[RuleVersion(0)]
 	public NameContext name() {
 		NameContext _localctx = new NameContext(Context, State);
-		EnterRule(_localctx, 12, RULE_name);
+		EnterRule(_localctx, 14, RULE_name);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 56;
+			State = 66;
 			Match(IDENTIFIER);
-			State = 57;
+			State = 67;
 			ravno();
 			}
 		}
@@ -443,13 +517,13 @@ public partial class MapParserParser : Parser {
 	[RuleVersion(0)]
 	public RavnoContext ravno() {
 		RavnoContext _localctx = new RavnoContext(Context, State);
-		EnterRule(_localctx, 14, RULE_ravno);
+		EnterRule(_localctx, 16, RULE_ravno);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 59;
+			State = 69;
 			Match(EQUAL);
-			State = 60;
+			State = 70;
 			@new();
 			}
 		}
@@ -489,13 +563,13 @@ public partial class MapParserParser : Parser {
 	[RuleVersion(0)]
 	public NewContext @new() {
 		NewContext _localctx = new NewContext(Context, State);
-		EnterRule(_localctx, 16, RULE_new);
+		EnterRule(_localctx, 18, RULE_new);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 62;
+			State = 72;
 			Match(NEW);
-			State = 63;
+			State = 73;
 			hashmap();
 			}
 		}
@@ -535,13 +609,13 @@ public partial class MapParserParser : Parser {
 	[RuleVersion(0)]
 	public HashmapContext hashmap() {
 		HashmapContext _localctx = new HashmapContext(Context, State);
-		EnterRule(_localctx, 18, RULE_hashmap);
+		EnterRule(_localctx, 20, RULE_hashmap);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 65;
+			State = 75;
 			Match(HASHMAP);
-			State = 66;
+			State = 76;
 			fb2();
 			}
 		}
@@ -581,13 +655,13 @@ public partial class MapParserParser : Parser {
 	[RuleVersion(0)]
 	public Fb2Context fb2() {
 		Fb2Context _localctx = new Fb2Context(Context, State);
-		EnterRule(_localctx, 20, RULE_fb2);
+		EnterRule(_localctx, 22, RULE_fb2);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 68;
+			State = 78;
 			Match(FB);
-			State = 69;
+			State = 79;
 			datatype3();
 			}
 		}
@@ -629,13 +703,13 @@ public partial class MapParserParser : Parser {
 	[RuleVersion(0)]
 	public Datatype3Context datatype3() {
 		Datatype3Context _localctx = new Datatype3Context(Context, State);
-		EnterRule(_localctx, 22, RULE_datatype3);
+		EnterRule(_localctx, 24, RULE_datatype3);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 71;
+			State = 81;
 			dataType();
-			State = 72;
+			State = 82;
 			comma2();
 			}
 		}
@@ -675,13 +749,13 @@ public partial class MapParserParser : Parser {
 	[RuleVersion(0)]
 	public Comma2Context comma2() {
 		Comma2Context _localctx = new Comma2Context(Context, State);
-		EnterRule(_localctx, 24, RULE_comma2);
+		EnterRule(_localctx, 26, RULE_comma2);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 74;
+			State = 84;
 			Match(COMMA);
-			State = 75;
+			State = 85;
 			datatype4();
 			}
 		}
@@ -723,13 +797,13 @@ public partial class MapParserParser : Parser {
 	[RuleVersion(0)]
 	public Datatype4Context datatype4() {
 		Datatype4Context _localctx = new Datatype4Context(Context, State);
-		EnterRule(_localctx, 26, RULE_datatype4);
+		EnterRule(_localctx, 28, RULE_datatype4);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 77;
+			State = 87;
 			dataType();
-			State = 78;
+			State = 88;
 			lb2();
 			}
 		}
@@ -769,13 +843,13 @@ public partial class MapParserParser : Parser {
 	[RuleVersion(0)]
 	public Lb2Context lb2() {
 		Lb2Context _localctx = new Lb2Context(Context, State);
-		EnterRule(_localctx, 28, RULE_lb2);
+		EnterRule(_localctx, 30, RULE_lb2);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 80;
+			State = 90;
 			Match(LB);
-			State = 81;
+			State = 91;
 			lp();
 			}
 		}
@@ -815,13 +889,13 @@ public partial class MapParserParser : Parser {
 	[RuleVersion(0)]
 	public LpContext lp() {
 		LpContext _localctx = new LpContext(Context, State);
-		EnterRule(_localctx, 30, RULE_lp);
+		EnterRule(_localctx, 32, RULE_lp);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 83;
+			State = 93;
 			Match(LP);
-			State = 84;
+			State = 94;
 			rp();
 			}
 		}
@@ -861,13 +935,13 @@ public partial class MapParserParser : Parser {
 	[RuleVersion(0)]
 	public RpContext rp() {
 		RpContext _localctx = new RpContext(Context, State);
-		EnterRule(_localctx, 32, RULE_rp);
+		EnterRule(_localctx, 34, RULE_rp);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 86;
+			State = 96;
 			Match(RP);
-			State = 87;
+			State = 97;
 			semicolon();
 			}
 		}
@@ -904,11 +978,11 @@ public partial class MapParserParser : Parser {
 	[RuleVersion(0)]
 	public SemicolonContext semicolon() {
 		SemicolonContext _localctx = new SemicolonContext(Context, State);
-		EnterRule(_localctx, 34, RULE_semicolon);
+		EnterRule(_localctx, 36, RULE_semicolon);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 89;
+			State = 99;
 			Match(SEMICOLON);
 			}
 		}
@@ -944,12 +1018,12 @@ public partial class MapParserParser : Parser {
 	[RuleVersion(0)]
 	public DataTypeContext dataType() {
 		DataTypeContext _localctx = new DataTypeContext(Context, State);
-		EnterRule(_localctx, 36, RULE_dataType);
+		EnterRule(_localctx, 38, RULE_dataType);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 91;
+			State = 101;
 			_la = TokenStream.LA(1);
 			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 1022L) != 0)) ) {
 			ErrorHandler.RecoverInline(this);
@@ -972,29 +1046,32 @@ public partial class MapParserParser : Parser {
 	}
 
 	private static int[] _serializedATN = {
-		4,1,21,94,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,6,2,7,
+		4,1,22,104,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,6,2,7,
 		7,7,2,8,7,8,2,9,7,9,2,10,7,10,2,11,7,11,2,12,7,12,2,13,7,13,2,14,7,14,
-		2,15,7,15,2,16,7,16,2,17,7,17,2,18,7,18,1,0,1,0,1,0,1,1,1,1,1,1,1,2,1,
-		2,1,2,1,3,1,3,1,3,1,4,1,4,1,4,1,5,1,5,1,5,1,6,1,6,1,6,1,7,1,7,1,7,1,8,
-		1,8,1,8,1,9,1,9,1,9,1,10,1,10,1,10,1,11,1,11,1,11,1,12,1,12,1,12,1,13,
-		1,13,1,13,1,14,1,14,1,14,1,15,1,15,1,15,1,16,1,16,1,16,1,17,1,17,1,18,
-		1,18,1,18,0,0,19,0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,0,
-		1,1,0,1,9,74,0,38,1,0,0,0,2,41,1,0,0,0,4,44,1,0,0,0,6,47,1,0,0,0,8,50,
-		1,0,0,0,10,53,1,0,0,0,12,56,1,0,0,0,14,59,1,0,0,0,16,62,1,0,0,0,18,65,
-		1,0,0,0,20,68,1,0,0,0,22,71,1,0,0,0,24,74,1,0,0,0,26,77,1,0,0,0,28,80,
-		1,0,0,0,30,83,1,0,0,0,32,86,1,0,0,0,34,89,1,0,0,0,36,91,1,0,0,0,38,39,
-		5,10,0,0,39,40,3,2,1,0,40,1,1,0,0,0,41,42,5,11,0,0,42,43,3,4,2,0,43,3,
-		1,0,0,0,44,45,3,36,18,0,45,46,3,6,3,0,46,5,1,0,0,0,47,48,5,13,0,0,48,49,
-		3,8,4,0,49,7,1,0,0,0,50,51,3,36,18,0,51,52,3,10,5,0,52,9,1,0,0,0,53,54,
-		5,12,0,0,54,55,3,12,6,0,55,11,1,0,0,0,56,57,5,20,0,0,57,58,3,14,7,0,58,
-		13,1,0,0,0,59,60,5,14,0,0,60,61,3,16,8,0,61,15,1,0,0,0,62,63,5,15,0,0,
-		63,64,3,18,9,0,64,17,1,0,0,0,65,66,5,16,0,0,66,67,3,20,10,0,67,19,1,0,
-		0,0,68,69,5,11,0,0,69,70,3,22,11,0,70,21,1,0,0,0,71,72,3,36,18,0,72,73,
-		3,24,12,0,73,23,1,0,0,0,74,75,5,13,0,0,75,76,3,26,13,0,76,25,1,0,0,0,77,
-		78,3,36,18,0,78,79,3,28,14,0,79,27,1,0,0,0,80,81,5,12,0,0,81,82,3,30,15,
-		0,82,29,1,0,0,0,83,84,5,17,0,0,84,85,3,32,16,0,85,31,1,0,0,0,86,87,5,18,
-		0,0,87,88,3,34,17,0,88,33,1,0,0,0,89,90,5,19,0,0,90,35,1,0,0,0,91,92,7,
-		0,0,0,92,37,1,0,0,0,0
+		2,15,7,15,2,16,7,16,2,17,7,17,2,18,7,18,2,19,7,19,1,0,1,0,3,0,43,8,0,4,
+		0,45,8,0,11,0,12,0,46,1,1,1,1,1,1,1,2,1,2,1,2,1,3,1,3,1,3,1,4,1,4,1,4,
+		1,5,1,5,1,5,1,6,1,6,1,6,1,7,1,7,1,7,1,8,1,8,1,8,1,9,1,9,1,9,1,10,1,10,
+		1,10,1,11,1,11,1,11,1,12,1,12,1,12,1,13,1,13,1,13,1,14,1,14,1,14,1,15,
+		1,15,1,15,1,16,1,16,1,16,1,17,1,17,1,17,1,18,1,18,1,19,1,19,1,19,0,0,20,
+		0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,0,1,1,0,1,9,85,
+		0,44,1,0,0,0,2,48,1,0,0,0,4,51,1,0,0,0,6,54,1,0,0,0,8,57,1,0,0,0,10,60,
+		1,0,0,0,12,63,1,0,0,0,14,66,1,0,0,0,16,69,1,0,0,0,18,72,1,0,0,0,20,75,
+		1,0,0,0,22,78,1,0,0,0,24,81,1,0,0,0,26,84,1,0,0,0,28,87,1,0,0,0,30,90,
+		1,0,0,0,32,93,1,0,0,0,34,96,1,0,0,0,36,99,1,0,0,0,38,101,1,0,0,0,40,42,
+		3,2,1,0,41,43,5,10,0,0,42,41,1,0,0,0,42,43,1,0,0,0,43,45,1,0,0,0,44,40,
+		1,0,0,0,45,46,1,0,0,0,46,44,1,0,0,0,46,47,1,0,0,0,47,1,1,0,0,0,48,49,5,
+		11,0,0,49,50,3,4,2,0,50,3,1,0,0,0,51,52,5,12,0,0,52,53,3,6,3,0,53,5,1,
+		0,0,0,54,55,3,38,19,0,55,56,3,8,4,0,56,7,1,0,0,0,57,58,5,14,0,0,58,59,
+		3,10,5,0,59,9,1,0,0,0,60,61,3,38,19,0,61,62,3,12,6,0,62,11,1,0,0,0,63,
+		64,5,13,0,0,64,65,3,14,7,0,65,13,1,0,0,0,66,67,5,21,0,0,67,68,3,16,8,0,
+		68,15,1,0,0,0,69,70,5,15,0,0,70,71,3,18,9,0,71,17,1,0,0,0,72,73,5,16,0,
+		0,73,74,3,20,10,0,74,19,1,0,0,0,75,76,5,17,0,0,76,77,3,22,11,0,77,21,1,
+		0,0,0,78,79,5,12,0,0,79,80,3,24,12,0,80,23,1,0,0,0,81,82,3,38,19,0,82,
+		83,3,26,13,0,83,25,1,0,0,0,84,85,5,14,0,0,85,86,3,28,14,0,86,27,1,0,0,
+		0,87,88,3,38,19,0,88,89,3,30,15,0,89,29,1,0,0,0,90,91,5,13,0,0,91,92,3,
+		32,16,0,92,31,1,0,0,0,93,94,5,18,0,0,94,95,3,34,17,0,95,33,1,0,0,0,96,
+		97,5,19,0,0,97,98,3,36,18,0,98,35,1,0,0,0,99,100,5,20,0,0,100,37,1,0,0,
+		0,101,102,7,0,0,0,102,39,1,0,0,0,2,42,46
 	};
 
 	public static readonly ATN _ATN =

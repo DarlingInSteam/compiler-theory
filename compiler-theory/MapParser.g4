@@ -1,5 +1,6 @@
 grammar MapParser;
 
+prog : (map NEWLINE?)+;
 map : MAP fb1;
 fb1 : FB datatype1;
 datatype1 : dataType comma1;
@@ -21,6 +22,7 @@ semicolon : SEMICOLON;
 
 dataType : 'Int' | 'String' | 'Bool' | 'Float' | 'Byte' | 'Short' | 'Long' | 'Boolean' | 'Char' ;
 
+NEWLINE : [\r\n]+ ;
 MAP: 'Map';
 FB: '<' ;
 LB: '>' ;

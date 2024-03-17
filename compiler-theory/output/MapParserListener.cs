@@ -31,6 +31,16 @@ using IToken = Antlr4.Runtime.IToken;
 [System.CLSCompliant(false)]
 public interface IMapParserListener : IParseTreeListener {
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="MapParserParser.prog"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterProg([NotNull] MapParserParser.ProgContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="MapParserParser.prog"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitProg([NotNull] MapParserParser.ProgContext context);
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="MapParserParser.map"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>

@@ -1,8 +1,16 @@
 namespace compiler_theory.app.view_model;
 
+/// <summary>
+/// Represents a tab in the application.
+/// Inherits from the ViewModelBase class.
+/// </summary>
 public class TabViewModel : ViewModelBase
 {
     private string _tabPath;
+
+    /// <summary>
+    /// Gets or sets the path of the tab.
+    /// </summary>
     public string TabPath
     {
         get { return _tabPath; }
@@ -17,6 +25,10 @@ public class TabViewModel : ViewModelBase
     }
 
     private string _tabCode;
+
+    /// <summary>
+    /// Gets or sets the code of the tab.
+    /// </summary>
     public string TabCode
     {
         get { return _tabCode; }
@@ -32,6 +44,9 @@ public class TabViewModel : ViewModelBase
 
     private bool _fileOpenOrCreate;
 
+    /// <summary>
+    /// Gets or sets a value indicating whether the file is open or created.
+    /// </summary>
     public bool FileOpenOrCreate
     {
         get { return _fileOpenOrCreate; }

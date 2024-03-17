@@ -5,6 +5,10 @@ namespace compiler_theory.app.model;
 
 public static class HtmlHelper
 {
+    /// <summary>
+    /// Opens the specified file in the default browser.
+    /// </summary>
+    /// <param name="filePath">The file path.</param>
     public static void OpenInBrowser(string filePath)
     {
         switch (filePath)

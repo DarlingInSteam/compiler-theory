@@ -36,6 +36,18 @@ using ParserRuleContext = Antlr4.Runtime.ParserRuleContext;
 [System.CLSCompliant(false)]
 public partial class MapParserBaseListener : IMapParserListener {
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="MapParserParser.prog"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterProg([NotNull] MapParserParser.ProgContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="MapParserParser.prog"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitProg([NotNull] MapParserParser.ProgContext context) { }
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="MapParserParser.map"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>

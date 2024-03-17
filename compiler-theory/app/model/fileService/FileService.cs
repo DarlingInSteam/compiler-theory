@@ -4,8 +4,17 @@ using Microsoft.Win32;
 
 namespace compiler_theory.app.model;
 
+/// <summary>
+/// Provides methods for reading, saving, and creating files, as well as retrieving file encoding and line separator information.
+/// </summary>
 public static class FileService
 {
+    
+    /// <summary>
+    /// Reads text from a file at the specified filePath.
+    /// </summary>
+    /// <param name="filePath">The path to the file to read.</param>
+    /// <returns>The text content of the file or an error message if the file does not exist or an error occurs.</returns>
     public static string ReadTextFromFile(string filePath)
     {
         try
@@ -21,7 +30,13 @@ public static class FileService
             return $"Ошибка чтения файла: {ex.Message}";
         }
     }
-
+    
+    
+    /// <summary>
+    /// Saves the provided code to a selected file using a SaveFileDialog.
+    /// </summary>
+    /// <param name="code">The code to save.</param>
+    /// <returns>The path of the saved file or an error message if saving fails.</returns>
     public static string Save(string code)
     {
         var saveFileDialog = new SaveFileDialog();
@@ -35,6 +50,12 @@ public static class FileService
         return saveFileDialog.FileName;
     }
 
+    /// <summary>
+    /// Saves the provided code to the specified path.
+    /// </summary>
+    /// <param name="code">The code to save.</param>
+    /// <param name="path">The path where the file will be saved.</param>
+    /// <returns>A message indicating successful saving.</returns>
     public static string Save(string code, string path)
     {
         File.WriteAllText(path, code);
@@ -42,6 +63,11 @@ public static class FileService
         return "успешное сохранение";
     }
 
+    /// <summary>
+    /// Prompts the user to select a file location and saves the provided code.
+    /// </summary>
+    /// <param name="code">The code to save.</param>
+    /// <returns>The path of the saved file or an error message if saving fails.</returns>
     public static string SaveAs(string code)
     {
         var saveFileDialog = new SaveFileDialog();
@@ -56,7 +82,11 @@ public static class FileService
         return filePath;
 
     }
-
+    
+    /// <summary>
+    /// Creates a new file and returns its path.
+    /// </summary>
+    /// <returns>The path of the created file or a message if creation fails.</returns>
     public static string CreateFile()
     {
         var saveFileDialog = new SaveFileDialog();
@@ -77,6 +107,11 @@ public static class FileService
 
     }
     
+    /// <summary>
+    /// Retrieves the encoding of a file at the specified filePath.
+    /// </summary>
+    /// <param name="filePath">The path to the file to analyze.</param>
+    /// <returns>The encoding name of the file content.</returns>
     public static string GetFileEncoding(string filePath)
     {
         Encoding resultEncoding = null;
@@ -100,6 +135,11 @@ public static class FileService
         return resultEncoding.EncodingName;
     }
     
+    /// <summary>
+    /// Retrieves the line separator used in the file at the specified filePath.
+    /// </summary>
+    /// <param name="filePath">The path to the file to analyze.</param>
+    /// <returns>The line separator type (CRLF, CR, LF, or Unknown).</returns>
     public static string GetFileLineSeparator(string filePath)
     {
         using var streamReader = new StreamReader(filePath);
