@@ -8,6 +8,7 @@
     x:Class="compiler_theory.app.view.MainWindow"
     x:Uid="Window_MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:avalonEdit1="clr-namespace:compiler_theory.app.model.avalonEdit"
     xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:materialIcons="clr-namespace:Material.Icons.WPF;assembly=Material.Icons.WPF"
@@ -50,7 +51,7 @@
             Key="L"
             Modifiers="Control" />
         <KeyBinding
-            Command="{Binding AnaluzeCode}"
+            Command="{Binding AnalyzeCode}"
             Key="F5"
             Modifiers="Control" />
     </Window.InputBindings>
@@ -129,9 +130,13 @@
                 </MenuItem>
 
                 <MenuItem
-                    Command="{Binding AnaluzeCode}"
+                    Command="{Binding AnalyzeCode}"
                     Header="Пуск"
-                    ToolTip="Ctrl + f5" />
+                    ToolTip="Ctrl + f5">
+
+                    <MenuItem Command="{Binding AnalyzeCodeAntlr}" Header="Парсинг ANTLR" />
+
+                </MenuItem>
 
                 <MenuItem Header="Справка">
                     <MenuItem Command="{Binding HelpCommand}" Header="Вызов справки" />
@@ -230,7 +235,7 @@
                 WordWrap="True"
                 xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit">
                 <b:Interaction.Behaviors>
-                    <model:AvalonEditBehaviour InputText="{Binding Code}" />
+                    <avalonEdit1:AvalonEditBehaviour InputText="{Binding Code}" />
                 </b:Interaction.Behaviors>
             </avalonEdit:TextEditor>
 
@@ -274,7 +279,7 @@
                                 Header="Сообщение"
                                 Width="Auto" />
                             <DataGridTextColumn
-                                Binding="{Binding ExpectedToken}"
+                                Binding="{Binding ErrorToken}"
                                 Header="Токен"
                                 Width="Auto" />
                         </DataGrid.Columns>

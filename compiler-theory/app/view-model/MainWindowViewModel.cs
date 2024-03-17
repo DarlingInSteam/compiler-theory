@@ -4,6 +4,7 @@ using System.IO;
 using System.Runtime.Intrinsics.Arm;
 using System.Text;
 using System.Windows;
+using System.Windows.Documents;
 using System.Windows.Input;
 using compiler_theory.app.model;
 using compiler_theory.app.model.parser;
@@ -448,13 +449,24 @@ public class MainWindowViewModel : ViewModelBase
 
     private ICommand _analyzeCode;
 
-    public ICommand AnaluzeCode
+    public ICommand AnalyzeCode
     {
         get
         {
             return _analyzeCode ??= new RelayCommand(AnalizeCodeCommand);
         }
     }
+    
+    private ICommand _analyzeCodeAntlr;
+    
+    public ICommand AnalyzeCodeAntlr
+    {
+        get
+        {
+            return _analyzeCodeAntlr ??= new RelayCommand(AnalizeCodeCommandAntlr);
+        }
+    }
+
 
     private void AnalizeCodeCommand(object p)
     {
@@ -469,13 +481,44 @@ public class MainWindowViewModel : ViewModelBase
             Tokens.Add(token);
         }
 
-        Parser parser = new Parser();
+        List<Token> tokensBuff = new List<Token>();
 
-        var errors = parser.Parse(buff);
+        foreach (var token in buff)
+        {
+            if (token.Code != "13")
+            {
+                tokensBuff.Add(token);
+            }
+        }
+        
+        Parser parser = new Parser(tokensBuff);
+
+        var errors = parser.Parse();
+        AntlrParser antlrParser = new AntlrParser();
+        var asd = antlrParser.Parse(Code);
         
         ParsingErrors.Clear();
         
         foreach (var error in errors)
+        {
+            ParsingErrors.Add(error);
+        }
+    } 
+    
+    private void AnalizeCodeCommandAntlr(object p)
+    {
+        AntlrParser antlrParser = new AntlrParser();
+        var errors = antlrParser.Parse(Code);
+        
+        ParsingErrors.Clear();
+        Tokens.Clear();
+        
+        foreach (var error in errors.GetLexerErrors())
+        {
+            Tokens.Add(error);
+        }
+
+        foreach (var error in errors.GetParsingErrors())
         {
             ParsingErrors.Add(error);
         }

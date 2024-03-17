@@ -4,211 +4,380 @@ namespace compiler_theory.app.model.parser;
 
 public class Parser
 {
-    private List<Token> TokensBuff { get; set; }
-    private List<ParsingError> Errors { get; set; }
-    private List<ParsingError> overErrors { get; set; }
-    private List<ParsingError> smallErrors { get; set; }
-    private List<string> DataTypes { get; } = new List<string> {"int", "string", "String", "bool", "float", "byte", "short", "long", "boolean", "char" };
-    private int errorsCount = 0;
+    private List<Token> _tokens;
+    private List<ParsingError> _parsingErrors;
+    private List<string> _dataTypes;
+    private List<string> _keyWords;
+    private List<string> _signs;
+    private List<string> _operators;
+    private int _currentToken;
 
-    public List<ParsingError> Parse(List<Token> tokens)
+    public Parser(List<Token> tokens, int currentToken = 0)
     {
-        TokensBuff = new List<Token>();
-        Errors = new List<ParsingError>();
-        overErrors = new List<ParsingError>();
-        smallErrors = new List<ParsingError>();
-
-        foreach (var token in tokens)
-        {
-            if (token.Code != "13")
-            {
-                TokensBuff.Add(token);
-            }
-        }
-
-        if (TokensBuff.Count == 0)
-        {
-            Errors.Add(new ParsingError
-            {
-                Message = $"Ожидался токен Map",
-                StartIndex = 0,
-                EndIndex = 0,
-                ExpectedToken = ""
-            });
-
-            return Errors;
-        }
-        
-        if (TokensBuff.Count > 18)
-        {
-            for (int i = 18; i < TokensBuff.Count; i++)
-            {
-                errorsCount += 1;
-                overErrors.Add(new ParsingError
-                {
-                    Message = "Недопустимый токен",
-                    StartIndex = TokensBuff[i].StartIndex,
-                    EndIndex = TokensBuff[i].EndIndex,
-                    ExpectedToken = TokensBuff[i].Value,
-                    NumberOfError = errorsCount
-                });
-            }
-        }
-
-        if (TokensBuff.Count < 18)
-        {
-            for (int i = TokensBuff.Count; i <= 18; i++)
-            {
-                var expectedToken = i switch
-                {
-                    1 => "Map",
-                    2 => "<",
-                    3 => "Data type",
-                    4 => ",",
-                    5 => "Data type",
-                    6 => ">",
-                    7 => "Identifier",
-                    8 => "=",
-                    9 => "new",
-                    10 => "HashMap",
-                    11 => "<",
-                    12 => "Data type",
-                    13 => ",",
-                    14 => "Data type",
-                    15 => ">",
-                    16 => "(",
-                    17 => ")",
-                    18 => ";"
-                };
-
-                errorsCount += 1;
-                
-                smallErrors.Add(new ParsingError
-                {
-                    Message = $"Ожидался токен '{expectedToken}'",
-                    StartIndex = tokens.Count > 0 ? tokens[tokens.Count - 1].EndIndex + 1 : 0,
-                    EndIndex = tokens.Count > 0 ? tokens[tokens.Count - 1].EndIndex + 1 : 0,
-                    ExpectedToken = expectedToken,
-                    NumberOfError = errorsCount
-                });
-            }
-        }
-        
-        CheckExpectedToken("Map");
-        CheckExpectedToken("<");
-        CheckExpectedToken("Data type");
-        CheckExpectedToken(",");
-        CheckExpectedToken("Data type");
-        CheckExpectedToken(">");
-        CheckExpectedToken("Identifier");
-        CheckExpectedToken("=");
-        CheckExpectedToken("new");
-        CheckExpectedToken("HashMap");
-        CheckExpectedToken("<");
-        CheckExpectedToken("Data type");
-        CheckExpectedToken(",");
-        CheckExpectedToken("Data type");
-        CheckExpectedToken(">");
-        CheckExpectedToken("(");
-        CheckExpectedToken(")");
-        CheckExpectedToken(";");
-
-        if (smallErrors.Count > 0)
-        {
-            foreach (var error in smallErrors)
-            {
-                Errors.Add(error);
-            }
-        }
-
-        if (overErrors.Count > 0)
-        {
-            foreach (var error in overErrors)
-            {
-                Errors.Add(error);
-            }
-        }
-
-        if (errorsCount == 0)
-        {
-            Errors.Add(new ParsingError
-            {
-                Message = "В строке нет ошибок",
-                StartIndex = 0,
-                EndIndex = 0,
-                ExpectedToken = "Good",
-                NumberOfError = 0
-            });
-        }
-        
-        
-        return Errors;
+        _tokens = tokens;
+        _currentToken = currentToken;
+        _parsingErrors = new List<ParsingError>();
+        _dataTypes = new List<string>
+            { "int", "string", "String", "bool", "float", "byte", "short", "long", "boolean", "char" };
+        _keyWords = new List<string>
+            { "Map", "HashMap", "new" };
+        _signs = new List<string>
+            { ",", ";", "(", ")", "<", ">" };
+        _operators = new List<string>
+            { "=" };
     }
 
-    private void CheckExpectedToken(string expected)
+    public List<ParsingError> Parse()
     {
-        if (TokensBuff.Count > 0)
+        List<ParsingError> errors = new List<ParsingError>();
+        
+        while (_currentToken < _tokens.Count)
         {
-            var token = TokensBuff[0];
-            TokensBuff.RemoveAt(0);
+            List<ParsingError> buff = ParseStatement();
 
-            switch (expected)
+            foreach (var error in buff)
             {
-                case "Identifier":
-                {
-                    if (token.Type != LexemeType.Identifier)
-                    {
-                        errorsCount += 1;
-                        
-                        Errors.Add(new ParsingError
-                        {
-                            Message = $"Ожидалось '{expected}'",
-                            StartIndex = token.StartIndex,
-                            EndIndex = token.EndIndex,
-                            ExpectedToken = token.Value,
-                            NumberOfError = errorsCount
-                        });
-                    }
-
-                    break;
-                }
-                case "Data type":
-                {
-                    if (!DataTypes.Contains(token.Value))
-                    {
-                        errorsCount += 1;
-                        
-                        Errors.Add(new ParsingError
-                        {
-                            Message = $"Ожидалось Data type",
-                            StartIndex = token.StartIndex,
-                            EndIndex = token.EndIndex,
-                            ExpectedToken = token.Value,
-                            NumberOfError = errorsCount
-                        });
-                    }
-
-                    break;
-                }
-                default:
-                {
-                    if (token.Value != expected)
-                    {
-                        errorsCount += 1;
-                        
-                        Errors.Add(new ParsingError
-                        {
-                            Message = $"Ожидалось '{expected}'",
-                            StartIndex = token.StartIndex,
-                            EndIndex = token.EndIndex,
-                            ExpectedToken = token.Value,
-                            NumberOfError = errorsCount
-                        });
-                    }
-
-                    break;
-                }
+                errors.Add(error);
+            }
+            
+            _parsingErrors.AddRange(errors);
+            if (errors.Count > 0)
+            {
+                SkipToNextStatement();
             }
         }
+
+        return _parsingErrors;
+    }
+
+    private List<ParsingError> ParseStatement()
+    {
+        List<ParsingError> errors = new List<ParsingError>();
+        
+        if (_currentToken >= _tokens.Count || _tokens[_currentToken].Code != "4")
+        {
+            errors.Add(new ParsingError
+            {
+                Message = $"Ожидалось ключевое слово 'Map', но получено '{GetTokenValue(_currentToken)}'",
+                NumberOfError = 2,
+                StartIndex = GetTokenStartIndex(_currentToken),
+                EndIndex = GetTokenEndIndex(_currentToken)
+            });
+            _currentToken++;
+        }
+        else
+        {
+            _currentToken++;
+        }
+
+        if (_currentToken >= _tokens.Count || _tokens[_currentToken].Code != "16")
+        {
+            errors.Add(new ParsingError
+            {
+                Message = $"Ожидался символ '<', но получено '{GetTokenValue(_currentToken)}'",
+                NumberOfError = 3,
+                StartIndex = GetTokenStartIndex(_currentToken),
+                EndIndex = GetTokenEndIndex(_currentToken)
+            });
+            _currentToken++;
+        }
+        else
+        {
+            _currentToken++;
+        }
+
+        if (_currentToken >= _tokens.Count || !_dataTypes.Contains(_tokens[_currentToken].Value))
+        {
+            errors.Add(new ParsingError
+            {
+                Message = $"Ожидался тип данных, но получено '{GetTokenValue(_currentToken)}'",
+                NumberOfError = 4,
+                StartIndex = GetTokenStartIndex(_currentToken),
+                EndIndex = GetTokenEndIndex(_currentToken)
+            });
+            _currentToken++;
+        }
+        else
+        {
+            _currentToken++;
+        }
+
+        if (_currentToken >= _tokens.Count || _tokens[_currentToken].Code != "18")
+        {
+            errors.Add(new ParsingError
+            {
+                Message = $"Ожидалась запятая ',', но получено '{GetTokenValue(_currentToken)}'",
+                NumberOfError = 5,
+                StartIndex = GetTokenStartIndex(_currentToken),
+                EndIndex = GetTokenEndIndex(_currentToken)
+            });
+            _currentToken++;
+        }
+        else
+        {
+            _currentToken++;
+        }
+
+        if (_currentToken >= _tokens.Count || !_dataTypes.Contains(_tokens[_currentToken].Value))
+        {
+            errors.Add(new ParsingError
+            {
+                Message = $"Ожидался тип данных, но получено '{GetTokenValue(_currentToken)}'",
+                NumberOfError = 6,
+                StartIndex = GetTokenStartIndex(_currentToken),
+                EndIndex = GetTokenEndIndex(_currentToken)
+            });
+            _currentToken++;
+        }
+        else
+        {
+            _currentToken++;
+        }
+
+        if (_currentToken >= _tokens.Count || _tokens[_currentToken].Code != "17")
+        {
+            errors.Add(new ParsingError
+            {
+                Message = $"Ожидался символ '>', но получено '{GetTokenValue(_currentToken)}'",
+                NumberOfError = 7,
+                StartIndex = GetTokenStartIndex(_currentToken),
+                EndIndex = GetTokenEndIndex(_currentToken)
+            });
+            _currentToken++;
+        }
+        else
+        {
+            _currentToken++;
+        }
+
+        if (_currentToken >= _tokens.Count || !IsIdentifier(_tokens[_currentToken].Value))
+        {
+            errors.Add(new ParsingError
+            {
+                Message = $"Ожидался идентификатор (имя переменной), но получено '{GetTokenValue(_currentToken)}'",
+                NumberOfError = 8,
+                StartIndex = GetTokenStartIndex(_currentToken),
+                EndIndex = GetTokenEndIndex(_currentToken)
+            });
+            _currentToken++;
+        }
+        else
+        {
+            _currentToken++;
+        }
+
+        if (_currentToken >= _tokens.Count || _tokens[_currentToken].Code != "14")
+        {
+            errors.Add(new ParsingError
+            {
+                Message = $"Ожидался оператор '=', но получено '{GetTokenValue(_currentToken)}'",
+                NumberOfError = 9,
+                StartIndex = GetTokenStartIndex(_currentToken),
+                EndIndex = GetTokenEndIndex(_currentToken)
+            });
+            _currentToken++;
+        }
+        else
+        {
+            _currentToken++;
+        }
+
+        if (_currentToken >= _tokens.Count || _tokens[_currentToken].Code != "5")
+        {
+            errors.Add(new ParsingError
+            {
+                Message = $"Ожидалось ключевое слово 'new', но получено '{GetTokenValue(_currentToken)}'",
+                NumberOfError = 10,
+                StartIndex = GetTokenStartIndex(_currentToken),
+                EndIndex = GetTokenEndIndex(_currentToken)
+            });
+            _currentToken++;
+        }
+        else
+        {
+            _currentToken++;
+        }
+
+        if (_currentToken >= _tokens.Count || _tokens[_currentToken].Code != "11")
+        {
+            errors.Add(new ParsingError
+            {
+                Message = $"Ожидалось ключевое слово 'HashMap', но получено '{GetTokenValue(_currentToken)}'",
+                NumberOfError = 11,
+                StartIndex = GetTokenStartIndex(_currentToken),
+                EndIndex = GetTokenEndIndex(_currentToken)
+            });
+            _currentToken++;
+        }
+        else
+        {
+            _currentToken++;
+        }
+
+        if (_currentToken >= _tokens.Count || _tokens[_currentToken].Code != "16")
+        {
+            errors.Add(new ParsingError
+            {
+                Message = $"Ожидалась открывающая '<', но получено '{GetTokenValue(_currentToken)}'",
+                NumberOfError = 18,
+                StartIndex = GetTokenStartIndex(_currentToken),
+                EndIndex = GetTokenEndIndex(_currentToken)
+            });
+            _currentToken++;
+        }
+        else
+        {
+            _currentToken++;
+        }
+
+        if (_currentToken >= _tokens.Count || !_dataTypes.Contains(_tokens[_currentToken].Value))
+        {
+            errors.Add(new ParsingError
+            {
+                Message = $"Ожидался тип данных, но получено '{GetTokenValue(_currentToken)}'",
+                NumberOfError = 13,
+                StartIndex = GetTokenStartIndex(_currentToken),
+                EndIndex = GetTokenEndIndex(_currentToken)
+            });
+            _currentToken++;
+        }
+        else
+        {
+            _currentToken++;
+        }
+
+        if (_currentToken >= _tokens.Count || _tokens[_currentToken].Code != "18")
+        {
+            errors.Add(new ParsingError
+            {
+                Message = $"Ожидалась запятая ',', но получено '{GetTokenValue(_currentToken)}'",
+                NumberOfError = 14,
+                StartIndex = GetTokenStartIndex(_currentToken),
+                EndIndex = GetTokenEndIndex(_currentToken)
+            });
+            _currentToken++;
+        }
+        else
+        {
+            _currentToken++;
+        }
+
+        if (_currentToken >= _tokens.Count || !_dataTypes.Contains(_tokens[_currentToken].Value))
+        {
+            errors.Add(new ParsingError
+            {
+                Message = $"Ожидался тип данных, но получено '{GetTokenValue(_currentToken)}'",
+                NumberOfError = 15,
+                StartIndex = GetTokenStartIndex(_currentToken),
+                EndIndex = GetTokenEndIndex(_currentToken)
+            });
+            _currentToken++;
+        }
+        else
+        {
+            _currentToken++;
+        }
+
+        if (_currentToken >= _tokens.Count || _tokens[_currentToken].Code != "17")
+        {
+            errors.Add(new ParsingError
+            {
+                Message = $"Ожидался символ '>', но получено '{GetTokenValue(_currentToken)}'",
+                NumberOfError = 16,
+                StartIndex = GetTokenStartIndex(_currentToken),
+                EndIndex = GetTokenEndIndex(_currentToken)
+            });
+            _currentToken++;
+        }
+        else
+        {
+            _currentToken++;
+        }
+
+        if (_currentToken >= _tokens.Count || _tokens[_currentToken].Code != "19")
+        {
+            errors.Add(new ParsingError
+            {
+                Message = $"Ожидалась открывающая круглая скобка '(', но получено '{GetTokenValue(_currentToken)}'",
+                NumberOfError = 19,
+                StartIndex = GetTokenStartIndex(_currentToken),
+                EndIndex = GetTokenEndIndex(_currentToken)
+            });
+            _currentToken++;
+        }
+        else
+        {
+            _currentToken++;
+        }
+
+        if (_currentToken >= _tokens.Count || _tokens[_currentToken].Code != "20")
+        {
+            errors.Add(new ParsingError
+            {
+                Message = $"Ожидалась закрывающая круглая скобка ')', но получено '{GetTokenValue(_currentToken)}'",
+                NumberOfError = 19,
+                StartIndex = GetTokenStartIndex(_currentToken),
+                EndIndex = GetTokenEndIndex(_currentToken)
+            });
+            _currentToken++;
+        }
+        else
+        {
+            _currentToken++;
+        }
+
+        if (_currentToken >= _tokens.Count || _tokens[_currentToken].Code != "15")
+        {
+            errors.Add(new ParsingError
+            {
+                Message = $"Ожидался символ ';', но получено '{GetTokenValue(_currentToken)}'",
+                NumberOfError = 17,
+                StartIndex = GetTokenStartIndex(_currentToken),
+                EndIndex = GetTokenEndIndex(_currentToken)
+            });
+            _currentToken++;
+        }
+
+        _currentToken++;
+
+        
+        return errors;
+    }
+
+    private void SkipToNextStatement()
+    {
+        while (_currentToken < _tokens.Count && _tokens[_currentToken].Code != "15")
+        {
+            _currentToken++;
+        }
+
+        if (_currentToken < _tokens.Count && _tokens[_currentToken].Code == "15")
+        {
+            _currentToken++; // Переходим к следующему токену после ;
+        }
+    }
+
+    private bool IsIdentifier(string value)
+    {
+        // Проверка на соответствие идентификатора (имени переменной)
+        // Здесь можно добавить более сложную логику проверки
+        return !_dataTypes.Contains(value) && !_keyWords.Contains(value) && !_signs.Contains(value) && !_operators.Contains(value);
+    }
+
+    private string GetTokenValue(int index)
+    {
+        return index < _tokens.Count ? _tokens[index].Value : "Конец входной строки";
+    }
+
+    private int GetTokenStartIndex(int index)
+    {
+        return index < _tokens.Count ? _tokens[index].StartIndex : -1;
+    }
+
+    private int GetTokenEndIndex(int index)
+    {
+        return index < _tokens.Count ? _tokens[index].EndIndex : -1;
     }
 }
+
+

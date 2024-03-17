@@ -2,7 +2,7 @@ using System.Windows;
 using ICSharpCode.AvalonEdit;
 using Microsoft.Xaml.Behaviors;
 
-namespace compiler_theory.app.model;
+namespace compiler_theory.app.model.avalonEdit;
 
 public class AvalonEditBehaviour : Behavior<TextEditor>
 {
