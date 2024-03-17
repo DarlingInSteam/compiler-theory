@@ -13,12 +13,32 @@ class ErrorListener : BaseErrorListener
             recognizer, IToken offendingSymbol, int line, int charPositionInLine,
         string msg, RecognitionException e)
     {
+        var splitString = msg.Split();
+        var needToken = "";
+
+        if (splitString.Last() != "IDENTIFIER")
+        {
+            needToken = splitString.Last()[1..^1];
+
+            if (needToken.Last() == '\'')
+            {
+                needToken = needToken[0..^1];
+            }
+        }
+        else
+        {
+            needToken = "_asd";
+        }
+        
+        
         errors.Add(new ParsingError
         {
             Message = msg,
             EndIndex = charPositionInLine,
             StartIndex = charPositionInLine,
             NumberOfError = errors.Count + 1,
+            ErrorToken = e.OffendingToken.Text,
+            NeedToken = needToken
         });
     }
 }

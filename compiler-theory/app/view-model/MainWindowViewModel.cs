@@ -231,6 +231,16 @@ public class MainWindowViewModel : ViewModelBase
     }
     
     private ICommand _decFont;
+
+    private ICommand _fixCode;
+
+    public ICommand FixCodeCommand
+    {
+        get
+        {
+            return _fixCode ?? (_fixCode = new RelayCommand(FixCode));
+        }
+    }
     
     public ICommand DecFontCommand
     {
@@ -283,6 +293,7 @@ public class MainWindowViewModel : ViewModelBase
         set
         {
             _code = value;
+            AnalyzeCodeCommandAntlr(null);
             OnPropertyChanged(nameof(Code));
         }
     }
@@ -453,7 +464,7 @@ public class MainWindowViewModel : ViewModelBase
     {
         get
         {
-            return _analyzeCode ??= new RelayCommand(AnalizeCodeCommand);
+            return _analyzeCode ??= new RelayCommand(AnalyzeCodeCommand);
         }
     }
     
@@ -463,12 +474,19 @@ public class MainWindowViewModel : ViewModelBase
     {
         get
         {
-            return _analyzeCodeAntlr ??= new RelayCommand(AnalizeCodeCommandAntlr);
+            return _analyzeCodeAntlr ??= new RelayCommand(AnalyzeCodeCommandAntlr);
         }
     }
 
+    private void FixCode(object p)
+    {
+        var a = new AntlrParser();
+        var buff = a.Parse(Code);
+        Code = CodeFix.Fix(Code, buff.GetParsingErrors());
+        Console.WriteLine(Code);
+    }
 
-    private void AnalizeCodeCommand(object p)
+    private void AnalyzeCodeCommand(object p)
     {
         Scanner scanner = new Scanner(Code);
         scanner.Analyze();
@@ -505,7 +523,7 @@ public class MainWindowViewModel : ViewModelBase
         }
     } 
     
-    private void AnalizeCodeCommandAntlr(object p)
+    private void AnalyzeCodeCommandAntlr(object p)
     {
         AntlrParser antlrParser = new AntlrParser();
         var errors = antlrParser.Parse(Code);

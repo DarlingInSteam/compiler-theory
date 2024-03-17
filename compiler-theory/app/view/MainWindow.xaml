@@ -191,6 +191,10 @@
                     Command="{Binding HelpCommand}"
                     Icon="{materialIcons:MaterialIconExt About}"
                     ToolTip="Справка" />
+                <MenuItem
+                    Command="{Binding FixCodeCommand}"
+                    Header=""
+                    Icon="{materialIcons:MaterialIconExt AutoFix}" />
             </Menu>
 
             <TabControl
@@ -281,6 +285,10 @@
                             <DataGridTextColumn
                                 Binding="{Binding ErrorToken}"
                                 Header="Токен"
+                                Width="Auto" />
+                            <DataGridTextColumn
+                                Binding="{Binding NeedToken}"
+                                Header="Предлагаемое исправление"
                                 Width="Auto" />
                         </DataGrid.Columns>
                     </DataGrid>
