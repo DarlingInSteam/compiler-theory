@@ -34,5 +34,5 @@ LP: '(' ;
 RP: ')' ;
 SEMICOLON: ';' ;
 
-IDENTIFIER : [a-zA-Z_][a-zA-Z_0-9]* ;
+IDENTIFIER : ('a'..'z'|'A'..'Z') ('a'..'z'|'A'..'Z')*;
 WS : [ \t\r\n]+ -> skip ;

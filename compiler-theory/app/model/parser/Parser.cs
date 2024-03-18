@@ -15,7 +15,6 @@ public class Parser
     private List<string> _operators;
     private int _currentToken;
 
-    
     /// <summary>
     /// Initializes a new instance of the Parser class with the specified list of tokens.
     /// </summary>

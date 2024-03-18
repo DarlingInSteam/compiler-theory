@@ -29,6 +29,10 @@ namespace compiler_theory.app.model.parser
                     {
                         codeBuff += parsingError.NeedToken;
                     }
+                    else if (parsingError.NeedToken == "_asd")
+                    {
+                        codeBuff = codeBuff.Insert(parsingError.StartIndex, parsingError.NeedToken);
+                    }
                     else
                     {
                         codeBuff += " ";
