@@ -179,6 +179,50 @@ SECONDOPERATOR, IDENTIFIRE, MIDOPERATOR, NEWKEYWORD, HASHMAP
 PRELASTOPERATOR, PRELASTDATATYPE, LASTSEPARATOR , LASTDATATYPE,
 LASTOPERATOR , FIRSTBRACKET , SECONDBRACKET, ENDLINE  }
 
+### Грамматика для antlr
+
+grammar MapParser;
+
+1. prog : (map NEWLINE?)+;
+2. map : MAP fb1;
+3. fb1 : FB datatype1;
+4. datatype1 : dataType comma1;
+5. comma1 : COMMA datatype2;
+6. datatype2 : dataType lb1;
+7. lb1 : LB name;
+8. name : IDENTIFIER ravno;
+9. ravno : EQUAL new;
+10. new : NEW hashmap;
+11. hashmap : HASHMAP fb2;
+12. fb2 : FB datatype3;
+13. datatype3 : dataType comma2;
+14. comma2 : COMMA datatype4;
+15. datatype4 : dataType lb2;
+16. lb2 : LB lp;
+17. lp : LP rp;
+18. rp : RP semicolon;
+19. semicolon : SEMICOLON;
+
+20. dataType : 'Int' | 'String' | 'Bool' | 'Float' | 'Byte' | 'Short' | 'Long' | 'Boolean' | 'Char' ;
+
+21. NEWLINE : [\r\n]+ ;
+22. MAP: 'Map';
+23. FB: '<' ;
+24. LB: '>' ;
+25. COMMA: ',' ;
+26. EQUAL: '=' ;
+27. NEW: 'new' ;
+28. HASHMAP: 'HashMap' ;
+29. LP: '(' ;
+30. RP: ')' ;
+31. SEMICOLON: ';' ;
+
+32. IDENTIFIER : [a-zA-Z_][a-zA-Z_0-9]* ;
+33. WS : [ \t\r\n]+ -> skip ;
+
+### Построенное дерево
+![](compiler-theory/app/resources/Screenshots/23.png)
+
 ### Классификация грамматики
 
 Согласно классификации Хомского, грамматика G[Z] является полностью автоматной.

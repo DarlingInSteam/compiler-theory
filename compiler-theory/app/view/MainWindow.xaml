@@ -109,10 +109,10 @@
                 </MenuItem>
 
                 <MenuItem Header="Текст">
-                    <MenuItem Header="Постановка задачи" />
-                    <MenuItem Header="Грамматика" />
+                    <MenuItem Header="Постановка задачи" Command="{Binding PostanovCommand}"/>
+                    <MenuItem Header="Грамматика" Command="{Binding GrammaCommand}"/>
                     <MenuItem Header="Классификация грамматики" />
-                    <MenuItem Header="Метод анализа" />
+                    <MenuItem Header="Метод анализа" Command="{Binding AnalyzeCommandPath}"/>
                     <MenuItem Header="Диагностика и нейтрализация ошибок" />
                     <MenuItem Command="{Binding TestCodeInput}" Header="Тестовый пример" />
                     <MenuItem Header="Список литературы" />

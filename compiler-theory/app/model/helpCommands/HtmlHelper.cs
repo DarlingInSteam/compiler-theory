@@ -29,6 +29,43 @@ public static class HtmlHelper
                 p.Start();
                 break;
             }
+            case "Postanovka.html":
+            {
+                File.WriteAllText("Postanovka.html", "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><title>Тема работы - Объявление ассоциативного массива языка Java</title></head><body><h1>Тема работы - Объявление ассоциативного массива языка Java</h1><h2>Особенности:</h2><p>Возможность выбрать любой тип Java.</p><h2>Примеры верных строк:</h2><p><code>Map&lt;String, String&gt; map = new HashMap&lt;String, String&gt;();</code></p><p><code>Map&lt;Char, Char&gt; _asd = new HashMap &lt;Char, Char&gt;();</code></p></body></html>");
+                var p = new Process();
+                p.StartInfo = new ProcessStartInfo(filePath) { UseShellExecute = true };
+                p.Start();
+                break;
+            }
+            case "Gramma.html":
+            {
+                File.WriteAllText("Gramma.html", "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><title>Грамматика</title><style>table { border-collapse: collapse; } th, td { border: 1px solid black; padding: 8px; }</style></head><body><h1>Грамматика</h1><table><tr><th>Нетерминал</th><th>Продукция</th></tr><tr><td>I</td><td>Map FIRSTOPERATOR</td></tr><tr><td>FIRSTOPERATOR</td><td>&lt; FIRSTTYPE</td></tr><tr><td>FIRSTTYPE</td><td>DATATYPE DATATYPESEPARATOR</td></tr><tr><td>DATATYPESEPARATOR</td><td>, SECONDDATATYPE</td></tr><tr><td>SECONDDATATYPE</td><td>DATATYPE SECONDOPERATOR</td></tr><tr><td>SECONDOPERATOR</td><td>&gt; IDENTIFIRE</td></tr><tr><td>IDENTIFIRE</td><td>symbol IDENTIFIRE | MIDOPERATOR</td></tr><tr><td>MIDOPERATOR</td><td>= NEWKEYWORD</td></tr><tr><td>NEWKEYWORD</td><td>new HASHMAP</td></tr><tr><td>HASHMAP</td><td>HashMap PRELASTOPERATOR</td></tr><tr><td>PRELASTOPERATOR</td><td>&lt; PRELASTDATATYPE</td></tr><tr><td>PRELASTDATATYPE</td><td>DATATYPE LASTSEPARATOR</td></tr><tr><td>LASTSEPARATOR</td><td>, LASTDATATYPE</td></tr><tr><td>LASTDATATYPE</td><td>DATATYPE LASTOPERATOR</td></tr><tr><td>LASTOPERATOR</td><td>&gt; FIRSTBRACKET</td></tr><tr><td>FIRSTBRACKET</td><td>( SECONDBRACKET</td></tr><tr><td>SECONDBRACKET</td><td>) ENDLINE</td></tr><tr><td>ENDLINE</td><td>;</td></tr></table></body></html>");
+                var p = new Process();
+                p.StartInfo = new ProcessStartInfo(filePath) { UseShellExecute = true };
+                p.Start();
+                break;
+            }
+            case "ClassGramm.html":
+            {
+                File.WriteAllText("Gramma.html", "");
+                var p = new Process();
+                p.StartInfo = new ProcessStartInfo(filePath) { UseShellExecute = true };
+                p.Start();
+                break;
+            }
+            case "Analyze.html":
+            {
+                File.WriteAllText("Gramma.html", "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><title>Грамматика</title><style>table { border-collapse: collapse; } th, td { border: 1px solid black; padding: 8px; }</style></head><body><h1>Грамматика</h1><table><tr><th>Нетерминал</th><th>Продукция</th></tr><tr><td>I</td><td>Map FIRSTOPERATOR</td></tr><tr><td>FIRSTOPERATOR</td><td>&lt; FIRSTTYPE</td></tr><tr><td>FIRSTTYPE</td><td>DATATYPE DATATYPESEPARATOR</td></tr><tr><td>DATATYPESEPARATOR</td><td>, SECONDDATATYPE</td></tr><tr><td>SECONDDATATYPE</td><td>DATATYPE SECONDOPERATOR</td></tr><tr><td>SECONDOPERATOR</td><td>&gt; IDENTIFIRE</td></tr><tr><td>IDENTIFIRE</td><td>symbol IDENTIFIRE | MIDOPERATOR</td></tr><tr><td>MIDOPERATOR</td><td>= NEWKEYWORD</td></tr><tr><td>NEWKEYWORD</td><td>new HASHMAP</td></tr><tr><td>HASHMAP</td><td>HashMap PRELASTOPERATOR</td></tr><tr><td>PRELASTOPERATOR</td><td>&lt; PRELASTDATATYPE</td></tr><tr><td>PRELASTDATATYPE</td><td>DATATYPE LASTSEPARATOR</td></tr><tr><td>LASTSEPARATOR</td><td>, LASTDATATYPE</td></tr><tr><td>LASTDATATYPE</td><td>DATATYPE LASTOPERATOR</td></tr><tr><td>LASTOPERATOR</td><td>&gt; FIRSTBRACKET</td></tr><tr><td>FIRSTBRACKET</td><td>( SECONDBRACKET</td></tr><tr><td>SECONDBRACKET</td><td>) ENDLINE</td></tr><tr><td>ENDLINE</td><td>;</td></tr></table></body></html>");
+                var p = new Process();
+                p.StartInfo = new ProcessStartInfo(filePath) { UseShellExecute = true };
+                p.Start();
+                break;
+                break;
+            }
+            case "OutCode.html":
+            {
+                break;
+            }
         }
     }
 }

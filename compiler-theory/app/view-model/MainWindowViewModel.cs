@@ -17,7 +17,10 @@ public class MainWindowViewModel : ViewModelBase
 {
     private const string _aboutPath = "About.html";
     private const string _helpPath = "Help.html";
-    private const string _testCode = "using System;\n\nnamespace HelloWorld\n{\n    class Hello {         \n        static void Main(string[] args)\n        {\n            string hello = \"Hello, World\";\n        }\n    }\n}";
+    private const string _postanovPath = "Postanovka.html";
+    private const string _grammaPath = "Gramma.html";
+    private const string _analyzePath = "Analyze.html";
+    private const string _testCode = "Map<Char,Char> _asd = new HashMap<Char,Char>();";
     private RelayCommand _openFileCommand;
     private bool _exitFlag = false;
     private string _code = "";
@@ -53,6 +56,23 @@ public class MainWindowViewModel : ViewModelBase
     
     private RelayCommand _aboutCommand;
     private RelayCommand _helpCommand;
+    private RelayCommand _postanovCommand;
+    private RelayCommand _grammaCommand;
+    private RelayCommand _analyzeCommand;
+    public RelayCommand AnalyzeCommandPath
+    {
+        get => _analyzeCommand ??= new RelayCommand(_ => HtmlHelper.OpenInBrowser(_analyzePath));
+    }
+    
+    public RelayCommand GrammaCommand
+    {
+        get => _grammaCommand ??= new RelayCommand(_ => HtmlHelper.OpenInBrowser(_grammaPath));
+    }
+    public RelayCommand PostanovCommand
+    {
+        get => _postanovCommand ??= new RelayCommand(_ => HtmlHelper.OpenInBrowser(_postanovPath));
+    }
+    
     public RelayCommand AboutCommand
     {
         get => _aboutCommand ??= new RelayCommand(_ => HtmlHelper.OpenInBrowser(_aboutPath));
